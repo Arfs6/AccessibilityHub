@@ -73,8 +73,10 @@ def _setupGunicorn(c: Connection):
     with c.cd('/etc/systemd/system/'):
             c.run("sudo mv /tmp/gunicorn.socket ./")
             c.run("sudo mv /tmp/gunicorn.service ./")
-    c.run("sudo service gunicorn.socket restart")
-    c.run("sudo service gunicorn.socket enable")
+    c.run("sudo systemctl start gunicorn.socket")
+    c.run("sudo systemctl enable gunicorn.socket")
+    c.run("sudo systemctl daemon-reload")
+    c.run("sudo systemctl restart gunicorn.socket")
 
 
 @task
@@ -126,6 +128,15 @@ def setupServers(c):
         _setupNginx(con)
         _setupGunicorn(con)
         setupUfw(con)
+
+
+@task
+def updatePipDependencies(c):
+    """Installs new pip dependencies on server."""
+    for con in allServers():
+        with con.cd("~/AccessibilityHub"):
+            con.run("git pull")
+            con.run("env/bin/python -m pip install -r requirements.txt")
 
 
 @task
