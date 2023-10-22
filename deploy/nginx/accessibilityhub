@@ -1,0 +1,15 @@
+server {
+	server_name accessibilityhub.tech www.accessibilityhub.tech;
+	listen 80;
+	# Ignore favicon
+	location = /favicon.ico { access_log off; log_not_found off; }
+	location / {
+		include proxy_params;
+		proxy_pass http://unix:/run/gunicorn.sock;
+	}
+	location ~ ^/static/ {
+		root /home/ubuntu/AccessibilityHub/src/accessibilityHub/static/;
+	}
+	error_log /var/log/nginx/accessibilityhub.error.log;
+	access_log /var/log/nginx/accessibilityhub.access.log;
+}
