@@ -1,0 +1,13 @@
+{
+	"servers": [
+			{
+			"host": "54.146.71.113",
+			"user": "ubuntu"
+		},
+		{
+			"host": "35.153.79.20",
+			"user": "ubuntu"
+		}
+	],
+	"private_key": "/home/abuahmad/.ssh/alx_keygen"
+}
