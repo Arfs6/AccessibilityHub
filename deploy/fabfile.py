@@ -169,4 +169,5 @@ def deploy(c):
     for con in allServers():
         with con.cd("~/AccessibilityHub"):
             con.run("git pull")
-        con.run("sudo service gunicorn.socket restart")
+        con.run("sudo systemctl restart gunicorn.socket")
+        con.sudo("systemctl restart gunicorn")
