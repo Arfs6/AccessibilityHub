@@ -23,9 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-$s(*3x4qh=l*j3rtcn(0qcb@aez+@i50%tx=&2_o6dr!36u*0l'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+import os
+if os.getenv("ACCESSIBILITY_HUB_ENV") == "dev":
+    DEBUG = True
 
-ALLOWED_HOSTS = ['accessibilityhub.tech', 'www.accessibilityhub.tech']
+ALLOWED_HOSTS = ['accessibilityhub.tech', 'www.accessibilityhub.tech', 'localhost']
 
 
 # Application definition
