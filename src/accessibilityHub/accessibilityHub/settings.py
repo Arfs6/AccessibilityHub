@@ -33,7 +33,7 @@ ALLOWED_HOSTS = ['accessibilityhub.tech', 'www.accessibilityhub.tech', 'localhos
 # Application definition
 
 INSTALLED_APPS = [
-        'core',
+        'core.apps.CoreConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
