@@ -1,0 +1,25 @@
+/* Header Style Sheet */
+
+@font-face {
+    font-family: 'Roboto';
+    src: url(../fonts/Roboto-Regular.ttf);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+nav {
+    border: 3px solid black;
+    border-radius: 5px;
+    margin: 10px 10px;
+}
+
