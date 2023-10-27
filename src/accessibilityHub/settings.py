@@ -27,7 +27,7 @@ import os
 if os.getenv("ACCESSIBILITY_HUB_ENV") == "dev":
     DEBUG = True
 
-ALLOWED_HOSTS = ['accessibilityhub.tech', 'www.accessibilityhub.tech', 'localhost']
+ALLOWED_HOSTS = ['accessibilityhub.tech', 'www.accessibilityhub.tech', 'localhost', '127.0.0.1']
 
 
 # Application definition
