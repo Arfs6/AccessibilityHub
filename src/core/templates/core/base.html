@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<!-- core/base.html -->
+<html lang="en">
+    <head>
+        {% include "core/head.html" %}
+    </head>
+    <body>
+        {% include "core/header.html" %}
+        
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+
+        {% include "core/footer.html" %}
+    </body>
+</html>

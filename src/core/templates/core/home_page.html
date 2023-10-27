@@ -1,0 +1,54 @@
+<!-- templates/home_page.html -->
+{% extends "core/base.html" %}
+
+{% block content %}
+	<section id="hero">
+		<div class="container mt-5 mb-5">
+			<div class="row">
+				<div class="col-md-6 px-4">
+					<h1>Making the Web More Inclusive</h1>
+					<p>Accessibility Hub is a platform for users to review and rate the accessibility of apps and websites.
+						Developers can use these reviews to improve their apps and websites to make them more inclusive.
+					</p>
+					<input type="text" placeholder="Search an App or Website" class="form-control">
+				</div>
+				<div class="col-md-6 my-auto px-4">
+					<img src="./images/hero-image.png" alt="Accessibility Hub Hero Image">
+				</div>
+			</div>
+		</div>
+	</section>
+	<section id="featured-apps">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6">
+					<h3>Featured Apps and Websites</h3>
+					<div class="app-card">
+						<!-- App 1 details -->
+						<!-- Add htmx attributes for dynamic content -->
+					</div>
+					<div class="app-card">
+						<!-- App 2 details -->
+						<!-- Add htmx attributes for dynamic content -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section id="how-it-works">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6">
+					<img src="./images/how-it-works.png" alt="How It Works Image">
+				</div>
+				<div class="col-md-6">
+					<h3>How It Works</h3>
+					<p>Accessibility Hub is a platform for users to review and rate the accessibility of apps and websites.
+						Developers can use these reviews to improve their apps and websites to make them more inclusive.
+					</p>
+					<a href="/review" class="btn btn-primary">Review an App</a>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}
