@@ -23,3 +23,14 @@ nav {
     margin: 10px 10px;
 }
 
+.navig {
+    margin-right: 10px;
+}
+
+#about-nav
+#login-nav
+#register-nav {
+    margin-right:5px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
