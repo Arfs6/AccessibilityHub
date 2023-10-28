@@ -13,7 +13,8 @@
 					<input type="text" placeholder="Search an App or Website" class="form-control">
 				</div>
 				<div class="col-md-6 my-auto px-4">
-					<img src="./images/hero-image.png" alt="Accessibility Hub Hero Image">
+					{% load static %}
+					<img src="{% static 'core/images/hero-image.svg' %}" alt="An illustration of a person using a computer">
 				</div>
 			</div>
 		</div>
@@ -39,7 +40,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-6">
-					<img src="./images/how-it-works.png" alt="How It Works Image">
+					<img src="{% static 'core/images/how-it-works.svg' %}" alt="An illustration of a man holding a search icon">
 				</div>
 				<div class="col-md-6">
 					<h3>How It Works</h3>
