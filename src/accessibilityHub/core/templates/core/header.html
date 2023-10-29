@@ -7,7 +7,7 @@
 		<li><a href="{% url 'core:logout' %}?next={{ request.path }}">Logout</a></li>
 		{% else %}
 		<li><a href="{% url 'core:login' %}?next={{ request.path }}">Login</a></li>
-		    <li><a href="{% url 'core:createAccount' %}">Create Account</a></li>
+		<li><a href="{% url 'core:createAccount' %}?next={{ request.path }}">Create Account</a></li>
 		{% endif %}
 		    </ul>
 		    </nav>
