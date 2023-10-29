@@ -1,5 +1,9 @@
 {% extends 'core/base.html' %}
 
+{% block title %}
+<title>{{ owner.name }} | Accessibility Hub</title>
+{% endblock %}
+
 {% block content %}
 <h1>{{ owner.name }}</h1>
 <p>Website: <a href="{{ owner.url }}">{{ owner.url }}</a></p>

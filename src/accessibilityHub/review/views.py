@@ -11,7 +11,6 @@ def index(request: HttpRequest) -> HttpResponse:
     """
     tools = Tool.objects.all()
     context = {
-            'title': 'Reviews',
             'tools': tools,
             }
     return render(request, 'review/index.html', context)
@@ -26,7 +25,6 @@ def owner(request: HttpRequest, slug: str, base36Id: str) -> HttpResponse:
     """
     owner = get_object_or_404(Owner, pk=base362Decimal(base36Id), slug=slug)
     context = {
-            'title': owner.name,
             'owner': owner,
             'tools': owner.tools.all(),
             }
@@ -43,7 +41,6 @@ def tool(request: HttpRequest, ownerSlug: str, ownerBase36Id: str, slug: str) ->
     print(owner)
     tool = get_object_or_404(owner.tools, slug=slug)
     context = {
-            'title': tool.name,
             'owner': owner,
             'tool': tool,
             'reviews': tool.reviews.all(),

@@ -1,5 +1,9 @@
 {% extends 'core/base.html' %}
 
+{% block title %}
+<title>{{ tool.name }} | Accessibility Hub</title>
+{% endblock %}
+
 {% block content %}
 <h1>{{ tool.name }}</h1>
 <p>Website: <a href="{{ tool.url }}">{{ tool.url }}</a></p>

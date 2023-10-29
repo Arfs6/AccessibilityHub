@@ -1,5 +1,9 @@
 {% extends "core/base.html" %}
 
+{% block title %}
+<title>Login | Accessibility Hub</title>
+{% endblock %}
+
 {% block content %}
 	<form action="{% url 'core:login' %}" method="POST">
 		{% csrf_token %}
