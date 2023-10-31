@@ -20,4 +20,11 @@
 <p>{{ review.comment  }}</p>
 {% endfor %}
 {% endif %}
+
+<h2>Your rating</h2>
+{% if form is not None %}
+{% include "api/review_form.html" %}
+{% else %}
+<p>You need to <a href="{% url 'core:login' %}?next={{ request.path }}">login</a> to rate this tool.</p>
+{% endif %}
 {% endblock %}

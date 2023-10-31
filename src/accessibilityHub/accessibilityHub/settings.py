@@ -35,6 +35,7 @@ ALLOWED_HOSTS = ['accessibilityhub.tech', 'www.accessibilityhub.tech', 'localhos
 INSTALLED_APPS = [
         'core.apps.CoreConfig',
         'review.apps.ReviewConfig',
+    'api.apps.ApiConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
