@@ -1,5 +1,13 @@
 <!-- templates/header.html -->
-<header>
-    Header goes here.
-</header>
-<main>
+    <nav>
+	    <ul>
+		    <li><a href="{% url 'core:home' %}"><span class="fas fa-home"></span>Home</a></li>
+		<li><a href="{% url 'review:index' %}">Reviews</a></li>
+		{% if user.is_authenticated %}
+		<li><a href="{% url 'core:logout' %}?next={{ request.path }}">Logout</a></li>
+		{% else %}
+		<li><a href="{% url 'core:login' %}?next={{ request.path }}">Login</a></li>
+		<li><a href="{% url 'core:createAccount' %}?next={{ request.path }}">Create Account</a></li>
+		{% endif %}
+		    </ul>
+		    </nav>

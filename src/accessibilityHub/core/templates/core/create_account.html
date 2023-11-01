@@ -1,5 +1,9 @@
 {% extends "core/base.html" %}
 
+{% block title %}
+<title>Create Account | Accessibility Hub</title>
+{% endblock %}
+
 {% block content %}
 <section>
 	<form action="{% url 'core:createAccount' %}" method="POST">
@@ -78,6 +82,7 @@
         {% endif %}
     </td>
 </tr>
+<input type="hidden" name="next" value="{{ request.GET.next }}">
 
 		<input type="submit" value="Create Account">
 		</form>

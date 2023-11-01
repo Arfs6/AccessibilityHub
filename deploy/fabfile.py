@@ -3,7 +3,7 @@
 from fabric import task, Connection
 import logging
 import json
-from typing import Generator
+from typing import Generator, Optional
 import sys
 
 
@@ -30,7 +30,9 @@ except json.JSONDecodeError as mess:
 def allServers() -> Generator:
     """Yields Connection objections for servers."""
     for server in config['servers']:
-        con = Connection(**server, connect_kwargs={"key_filename": config['private_key']})
+        if server.get('type') == 'lb':
+            continue
+        con = Connection(host=server['host'], user=server['user'], connect_kwargs={"key_filename": config['private_key']})
         yield con
 
 
@@ -73,8 +75,10 @@ def _setupGunicorn(c: Connection):
     with c.cd('/etc/systemd/system/'):
             c.run("sudo mv /tmp/gunicorn.socket ./")
             c.run("sudo mv /tmp/gunicorn.service ./")
-    c.run("sudo service gunicorn.socket restart")
-    c.run("sudo service gunicorn.socket enable")
+    c.run("sudo systemctl start gunicorn.socket")
+    c.run("sudo systemctl enable gunicorn.socket")
+    c.run("sudo systemctl daemon-reload")
+    c.run("sudo systemctl restart gunicorn.socket")
 
 
 @task
@@ -91,7 +95,7 @@ def _setupNginx(c: Connection):
     c.put("nginx/accessibilityhub", remote='/tmp')
     with c.cd("/etc/nginx/"):
         c.run("sudo mv /tmp/accessibilityhub sites-available")
-        c.run("sudo ln -fs /etc/nginx/sites-available/accessibilityhub /etc/nginx/sites-enabled/accessibilityhub")
+        c.run("sudo ln -fs /etc/nginx/sites-available/accessibilityhub /etc/nginx/sites-enabled/default")
         if c.run("sudo nginx -t").return_code != 0:
             log.error("Nginx configuration failed\nFile at deploy/nginx/accessibilityhub.")
             sys.exit()
@@ -118,6 +122,28 @@ def setupUfw(c):
 
 
 @task
+def setupLoadBalancer(c):
+    """Configures haproxy on load balancer server and enable firewall."""
+    lbServer: Optional[dict] = None
+    for server in config['servers']:
+        if server.get('type') == 'lb':
+            lbServer = server
+            break
+    if lbServer is None:
+        log.error("No load balancer in server config file.")
+        return
+    con = Connection(host=lbServer['host'], user=lbServer['user'], connect_kwargs={"key_filename": config['private_key']})
+    con.sudo("apt-get update")
+    con.sudo("apt-get install haproxy -y")
+    # enable init script for haproxy.
+    # Make sure running the command twice has no effect.
+    con.sudo("mv /etc/haproxy/haproxy.cfg{,.old}")
+    con.put("haproxy/haproxy.cfg", remote='/tmp')
+    con.sudo("mv /tmp/haproxy.cfg /etc/haproxy/haproxy.cfg")
+    con.sudo("service haproxy restart")
+
+
+@task
 def setupServers(c):
     """Install everything we need to run our django app."""
     for con in allServers():
@@ -129,9 +155,22 @@ def setupServers(c):
 
 
 @task
+def updatePipDependencies(c):
+    """Installs new pip dependencies on server."""
+    for con in allServers():
+        with con.cd("~/AccessibilityHub"):
+            con.run("git pull")
+            con.run("env/bin/python -m pip install -r requirements.txt")
+
+
+@task
 def deploy(c):
     """Deploys a new version of Accessibility Hub."""
     for con in allServers():
         with con.cd("~/AccessibilityHub"):
             con.run("git pull")
-        con.run("sudo service gunicorn.socket restart")
+        with con.cd("~/AccessibilityHub/src/accessibilityHub"):
+            con.sudo("../../env/bin/python manage.py makemigrations")
+            con.sudo("../../env/bin/python manage.py migrate")
+        con.run("sudo systemctl restart gunicorn.socket")
+        con.sudo("systemctl restart gunicorn")

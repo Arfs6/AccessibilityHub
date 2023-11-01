@@ -2,11 +2,18 @@
 	"servers": [
 			{
 			"host": "54.146.71.113",
-			"user": "ubuntu"
+			"user": "ubuntu",
+			"type": "wb"
 		},
 		{
 			"host": "35.153.79.20",
-			"user": "ubuntu"
+			"user": "ubuntu",
+			"type": "wb"
+		},
+		{
+			"host": "18.234.130.97",
+			"user": "ubuntu",
+			"type": "lb"
 		}
 	],
 	"private_key": "/home/abuahmad/.ssh/alx_keygen"
