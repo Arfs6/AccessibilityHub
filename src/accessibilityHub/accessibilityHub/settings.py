@@ -10,8 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from os import getenv
 from pathlib import Path
 
+devEnv = True if getenv('ACCESSIBILITY_HUB_ENV') else False
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,8 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-$s(*3x4qh=l*j3rtcn(0qcb@aez+@i50%tx=&2_o6dr!36u*0l'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-import os
-if os.getenv("ACCESSIBILITY_HUB_ENV") == "dev":
+if devEnv:
     DEBUG = True
 
 ALLOWED_HOSTS = ['accessibilityhub.tech', 'www.accessibilityhub.tech', 'localhost']
@@ -78,11 +79,22 @@ WSGI_APPLICATION = 'accessibilityHub.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
+if devEnv:
+    databaseOpts = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
+else:
+    databaseOpts = {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "accessibility_hub_db",
+        "USER": "accessibility_hub_mysql_user",
+        "PASSWORD": "password",  # todo: secure this.
+        "HOST": "127.0.0.1",
+        "PORT": "3306",
+    }
+DATABASES = {
+    'default': databaseOpts,
 }
 
 
