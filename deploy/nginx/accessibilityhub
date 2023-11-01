@@ -1,5 +1,5 @@
 server {
-	server_name accessibilityhub.tech www.accessibilityhub.tech;
+	server_name _;
 	listen 80;
 	# Ignore favicon
 	location = /favicon.ico { access_log off; log_not_found off; }
@@ -12,4 +12,5 @@ server {
 	}
 	error_log /var/log/nginx/accessibilityhub.error.log;
 	access_log /var/log/nginx/accessibilityhub.access.log;
+	proxy_set_header X-Server-Name $host;
 }
