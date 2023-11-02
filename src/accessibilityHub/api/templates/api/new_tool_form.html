@@ -1,0 +1,7 @@
+<form hx-post="{% url 'api:newTool' %}">
+	{% csrf_token %}
+	<h2>Tool Info</h2>
+	<p>Please input the info of the tool you wish to add</p>
+	{{ form }}
+	<input type="submit" value="Submit">
+	</form>

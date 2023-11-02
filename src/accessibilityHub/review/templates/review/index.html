@@ -8,6 +8,11 @@
 <h1>Tools Reviews</h1>
 <p>Discover tools reviewed and rated by the community! Your review and rating are vital to help others make informed decisions on accessible tools. Join our inclusive community, share your insights, and together, let's make the digital world more accessible for everyone.</p>
 <h2>Tools</h2>
+{% if user.is_authenticated %}
+<p><a href="{% url 'review:newTool' %}">Request new tool</a></p>
+{% else %}
+<p><a href="{% url 'core:login' %}">Login</a> to request new tool</p>
+{% endif %}
 <p>Here are all the tools:</p>
 {% for tool in tools %}
 <h3><a href="{% url 'review:tool' ownerSlug=tool.owner.slug ownerBase36Id=tool.owner.base36Id slug=tool.slug %}">{{ forloop.counter }}. {{ tool.name }}</a></h3>

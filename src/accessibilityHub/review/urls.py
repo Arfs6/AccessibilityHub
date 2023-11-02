@@ -17,5 +17,10 @@ urlpatterns = [
             "<str:ownerSlug>_<str:ownerBase36Id>/<str:slug>",
             views.tool,
             name='tool'
-            )
+            ),
+    path(
+        "new",
+        views.newTool,
+        name="newTool"
+    )
         ]

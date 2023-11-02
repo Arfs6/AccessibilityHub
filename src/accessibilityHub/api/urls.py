@@ -11,4 +11,14 @@ urlpatterns = [
         views.createReview,
         name='createReview'
     ),
+    path(
+        'owners',
+        views.newOwner,
+        name='newOwner'
+    ),
+    path(
+        'tools',
+        views.newTool,
+        name='newTool'
+    )
 ]
