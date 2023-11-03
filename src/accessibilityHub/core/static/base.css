@@ -1,0 +1,9 @@
+/* Accessibility Hub base css file */
+
+* {
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+	background-color: #0A0A2A;
+	color: #EDF5FF;
+}

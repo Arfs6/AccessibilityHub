@@ -1,7 +1,8 @@
 <!-- templates/header.html -->
+<p>Accessibility Hub</p>
+<p>Your accessibility focused community</p>
     <nav>
 	    <ul>
-		    <li><a href="{% url 'core:home' %}"><span class="fas fa-home"></span>Home</a></li>
 		<li><a href="{% url 'review:index' %}">Reviews</a></li>
 		{% if user.is_authenticated %}
 		<li><a href="{% url 'core:logout' %}?next={{ request.path }}">Logout</a></li>

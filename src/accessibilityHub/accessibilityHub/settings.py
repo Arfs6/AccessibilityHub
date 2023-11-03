@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-$s(*3x4qh=l*j3rtcn(0qcb@aez+@i50%tx=&2_o6dr!36u*0l'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if not devEnv:
+if devEnv:
     DEBUG = True
 
 ALLOWED_HOSTS = ['accessibilityhub.tech', 'www.accessibilityhub.tech', 'localhost']
@@ -141,3 +141,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 CSRF_TRUSTED_ORIGINS = ['https://accessibilityhub.tech']
+STATIC_ROOT = "static/"
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
