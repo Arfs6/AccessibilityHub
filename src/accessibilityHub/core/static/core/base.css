@@ -9,3 +9,49 @@ body {
 	color: #EDF5FF;
 	/* color: red; */
 }
+
+p#site-name {
+	color: #800000;
+}
+a {
+	text-decoration: none;
+	color: #0000FF; /* blue */
+	cursor: pointer;
+}
+
+a:visited {
+	color: #800080; /* purple */
+}
+
+a:hover {
+	text-decoration: underline;
+	color: #FF0000; /* red */
+}
+
+header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+header .left,
+header .right {
+	margin: 0 10px;
+}
+
+header .left {
+	order: 1;
+}
+
+header .right {
+	order: 2;
+}
+
+nav ul {
+	list-style: none;
+	padding: 0;
+}
+
+nav ul li {
+	display: inline;
+}
