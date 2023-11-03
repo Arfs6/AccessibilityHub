@@ -1,9 +1,11 @@
 /* Accessibility Hub base css file */
 
-body {
-    font-family: 'Noto Sans', sans-serif;
-    font-weight: 400;
-    font-style: normal;
-	background-colr: #001F5B;
+main {
+	font-family: 'Noto Sans', sans-serif;
+	font-weight: 400;
+	font-style: normal;
+	background-color: #05143F;
+	/* background-color: blue; */
 	color: #EDF5FF;
+	/* color: red; */
 }
