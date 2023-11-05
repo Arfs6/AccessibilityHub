@@ -1,7 +1,7 @@
 /* Accessibility Hub base css file */
 
 body {
-	font-family: 'Noto Sans', sans-serif;
+	font-family: 'Noto Sans', "Segoe UI", sans-serif;
 	font-weight: 400;
 	font-style: normal;
 	background-color: #05143F;
@@ -10,9 +10,6 @@ body {
 	/* color: red; */
 }
 
-p#site-name {
-	color: #800000;
-}
 a {
 	text-decoration: none;
 	color: #0000FF; /* blue */
@@ -54,4 +51,5 @@ nav ul {
 
 nav ul li {
 	display: inline;
+	margin: 10;
 }
