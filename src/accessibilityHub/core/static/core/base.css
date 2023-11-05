@@ -44,6 +44,10 @@ header .right {
 	order: 2;
 }
 
+header .left #site-name {
+	margin-left: 40px;
+}
+
 nav ul {
 	list-style: none;
 	padding: 0;
