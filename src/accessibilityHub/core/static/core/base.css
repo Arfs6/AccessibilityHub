@@ -1,0 +1,59 @@
+/* Accessibility Hub base css file */
+
+body {
+	font-family: 'Noto Sans', "Segoe UI", sans-serif;
+	font-weight: 400;
+	font-style: normal;
+	background-color: #05143F;
+	/* background-color: blue; */
+	color: #EDF5FF;
+	/* color: red; */
+}
+
+a {
+	text-decoration: none;
+	color: #0000FF; /* blue */
+	cursor: pointer;
+}
+
+a:visited {
+	color: #800080; /* purple */
+}
+
+a:hover {
+	text-decoration: underline;
+	color: #FF0000; /* red */
+}
+
+header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+header .left,
+header .right {
+	margin: 0 10px;
+}
+
+header .left {
+	order: 1;
+}
+
+header .right {
+	order: 2;
+}
+
+header .left #site-name {
+	margin-left: 40px;
+}
+
+nav ul {
+	list-style: none;
+	padding: 0;
+}
+
+nav ul li {
+	display: inline;
+	margin: 10;
+}

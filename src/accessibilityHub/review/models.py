@@ -14,7 +14,18 @@ class Owner(models.Model):
     name = models.CharField(max_length=128)
     url = models.URLField()
     description = models.TextField(null=True, blank=True)
-    slug = models.SlugField(max_length=128)
+    slug = models.SlugField(max_length=128, default='')
+    verified = models.BooleanField(default=False)
+
+    def __str__(self):
+        """Returns a string representation of the object.
+        Mainly for admin site.
+        """
+        return f"Owner: {self.name}"
+    @classmethod
+    def allVerified(cls):
+        """Return all verified Owner objects."""
+        return cls.objects.filter(verified=True)
 
     def save(self, *args, **kwargs):
         """Does some tasks before saving the object.
@@ -37,8 +48,13 @@ class Tool(models.Model):
     url = models.URLField()
     description = models.TextField(null=True, blank=True)
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE, related_name='tools')
-    slug = models.SlugField(max_length=128)
+    slug = models.SlugField(max_length=128, default='')
+    verified = models.BooleanField(default=False)
 
+    @classmethod
+    def allVerified(cls):
+        """Return all verified Tool objects."""
+        return cls.objects.filter(verified=True, owner__verified=True)
     def save(self, *args, **kwargs):
         """Does some tasks before saving the object.
         Primarily add some fields to the model.

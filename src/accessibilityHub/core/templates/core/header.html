@@ -1,13 +1,19 @@
 <!-- templates/header.html -->
-    <nav>
-	    <ul>
-		    <li><a href="{% url 'core:home' %}"><span class="fas fa-home"></span>Home</a></li>
-		<li><a href="{% url 'review:index' %}">Reviews</a></li>
-		{% if user.is_authenticated %}
-		<li><a href="{% url 'core:logout' %}?next={{ request.path }}">Logout</a></li>
-		{% else %}
-		<li><a href="{% url 'core:login' %}?next={{ request.path }}">Login</a></li>
-		<li><a href="{% url 'core:createAccount' %}?next={{ request.path }}">Create Account</a></li>
-		{% endif %}
-		    </ul>
-		    </nav>
+<div class="left">
+	<p id="site-name"><a href="{% url 'core:home' %}">Accessibility Hub</a></p>
+	<p>Your accessibility focused community</p>
+</div>
+<div class="right">
+	<nav>
+		<ul>
+			<li><a href="{% url 'review:index' %}"><span class="fas fa-list"></span>Reviews</a></li>
+			<li><a href="{% url 'core:about' %}"><span class="fas fa-info-circle"></span>About</a></li>
+			{% if user.is_authenticated %}
+			<li><a href="{% url 'core:logout' %}?next={{ request.path }}"><span class="fas fa-sign-out-alt"></span>Logout</a></li>
+			{% else %}
+			<li><a href="{% url 'core:login' %}?next={{ request.path }}"><span class="fas fa-sign-in-alt"></span>Login</a></li>
+			<li><a href="{% url 'core:createAccount' %}?next={{ request.path }}"><span class="fas fa-user-plus"></span>Create Account</a></li>
+			{% endif %}
+		</ul>
+	</nav>
+</div>

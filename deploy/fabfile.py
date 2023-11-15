@@ -170,7 +170,7 @@ def deploy(c):
         with con.cd("~/AccessibilityHub"):
             con.run("git pull")
         with con.cd("~/AccessibilityHub/src/accessibilityHub"):
-            con.sudo("../../env/bin/python manage.py makemigrations")
+            con.run("../../env/bin/python manage.py makemigrations")
             con.sudo("../../env/bin/python manage.py migrate")
         con.run("sudo systemctl restart gunicorn.socket")
         con.sudo("systemctl restart gunicorn")

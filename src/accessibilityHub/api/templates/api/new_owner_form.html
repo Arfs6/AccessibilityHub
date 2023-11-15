@@ -1,0 +1,7 @@
+<form hx-post="{% url 'api:newOwner' %}">
+	{% csrf_token %}
+	<h2>Owner Info</h2>
+	<p>Please input the basic info of the owner of the tool you wish to add.</p>
+	{{ form }}
+	<input type="submit" value="Submit">
+</form>

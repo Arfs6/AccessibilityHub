@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpRequest, HttpResponse
 
-from .forms import ReviewForm
+from .forms import ReviewForm, OwnerForm
 from .models import Tool, Owner, Review
 from utils import base362Decimal
 
@@ -10,7 +10,7 @@ def index(request: HttpRequest) -> HttpResponse:
     """Index page for reviews.
     Should make finding tools easier.
     """
-    tools = Tool.objects.all()
+    tools = Tool.allVerified().all()
     context = {
             'tools': tools,
             }
@@ -24,10 +24,10 @@ def owner(request: HttpRequest, slug: str, base36Id: str) -> HttpResponse:
     - slug: slug gotten from url, representing the owner's name.'
     - base36Id: id of owner converted to base36.
     """
-    owner = get_object_or_404(Owner, pk=base362Decimal(base36Id), slug=slug)
+    owner = get_object_or_404(Owner, pk=base362Decimal(base36Id), slug=slug, verified=True)
     context = {
             'owner': owner,
-            'tools': owner.tools.all(),
+            'tools': owner.tools.filter(verified=True).all(),
             }
     return render(request, 'review/owner.html', context)
 
@@ -38,8 +38,11 @@ def tool(request: HttpRequest, ownerSlug: str, ownerBase36Id: str, slug: str) ->
     - request: request object passed by django.
     - slug: slug name of tool, gotten from url.
     """
-    owner = get_object_or_404(Owner, pk=base362Decimal(ownerBase36Id), slug=ownerSlug)
-    tool = get_object_or_404(owner.tools, slug=slug)
+    owner = get_object_or_404(
+        Owner, pk=base362Decimal(ownerBase36Id), slug=ownerSlug,
+        verified=True
+    )
+    tool = get_object_or_404(owner.tools, slug=slug, verified=True)
     if request.user.is_authenticated:
         # display form for editing / creating review.
         initial = {'userId': request.user.id}
@@ -57,3 +60,14 @@ def tool(request: HttpRequest, ownerSlug: str, ownerBase36Id: str, slug: str) ->
         'form': form,
             }
     return render(request, 'review/tool.html', context)
+
+
+def newTool(request: HttpRequest) -> HttpResponse:
+    """This view allows a user to request for creation of new tools to be reviewd.
+    """
+    form = OwnerForm()
+    context = {
+        'title': 'Request New Tool',
+        'form': form,
+    }
+    return render(request, "review/new_tool.html", context)

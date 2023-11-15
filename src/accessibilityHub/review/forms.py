@@ -26,3 +26,20 @@ class ReviewForm(forms.Form):
         required=False  # Comment field is optional
     )
     userId = forms.CharField(widget=forms.HiddenInput())
+
+
+class OwnerForm(forms.Form):
+    """Form for Owner model."""
+    name = forms.CharField(max_length=128)
+    url = forms.URLField()
+    description = forms.CharField(widget=forms.Textarea)
+
+
+class ToolForm(forms.Form):
+    """Form for Tool model."""
+    name = forms.CharField(max_length=128)
+    description = forms.CharField(widget=forms.Textarea)
+    url = forms.URLField()
+    ownerName = forms.CharField(max_length=128, widget=forms.HiddenInput())
+    ownerDescription = forms.CharField(widget=forms.HiddenInput())
+    ownerUrl = forms.URLField(widget=forms.HiddenInput())
