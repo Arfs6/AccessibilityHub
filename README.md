@@ -6,6 +6,8 @@ A community focused on accessibility. It provides space for discussion and revie
 
 This repo has the first alpha version of the website. All subsequent versions are under different licences.
 
+The website is not live yet.
+
 ## Try it!
 
 You need python to be able to test this web app.
