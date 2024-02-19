@@ -1,6 +1,8 @@
+from http.client import HTTPResponse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
 from django.contrib.auth import views as authViews
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 
@@ -24,19 +26,20 @@ def createAccount(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         _form = CoreUserCreationForm(request.POST)
         if _form.is_valid():
-            # if passwords aren't equal, code execution won't reach here.
-            data = _form.cleaned_data
-            newUser = User.objects.create_user(data['username'], password=data['password1'], email=data['email'])
-            newUser.first_name = data['firstName']
-            if data['lastName']:
-                newUser.last_name = data['lastName']
-            newUser.save()
+            newUser = _form.save()
             login(request, newUser)
-            return HttpResponseRedirect(request.POST.get("next", "/"))
+            next = request.POST.get('next')
+            if next is None:
+                next = settings.LOGIN_REDIRECT_URL
+            return HttpResponseRedirect(next)
+        else:
+            next = request.POST.get('next')
     else:
         _form = CoreUserCreationForm()
+        next = request.GET.get('next')
 
     context = {
             'form': _form,
+        'next': next,
             }
     return render(request, "core/create_account.html", context)

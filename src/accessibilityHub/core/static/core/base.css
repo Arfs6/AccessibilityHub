@@ -57,3 +57,7 @@ nav ul li {
 	display: inline;
 	margin: 10;
 }
+
+.errorlist li {
+	color: red;
+}
