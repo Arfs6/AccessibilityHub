@@ -1,0 +1,11 @@
+{% extends "core/base.html" %}
+
+{% block title %}
+<title>Logout | Accessibility Hub</title>
+{% endblock %}
+
+{% block content %}
+<H1>Ready to leave?</h1>
+<p>Click the button below to logout.</p>
+<button hx-delete="{% url 'core:logout' %}{% if next %}?next={{ next }}{% endif %}" >Logout</button>
+{% endblock %}

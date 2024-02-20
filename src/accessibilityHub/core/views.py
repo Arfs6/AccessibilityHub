@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
 from django.contrib.auth import views as authViews
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 
 from .forms import CoreUserCreationForm
 
@@ -43,3 +43,18 @@ def createAccount(request: HttpRequest) -> HttpResponse:
         'next': next,
             }
     return render(request, "core/create_account.html", context)
+
+
+def coreLogoutView(request):
+    """Logs the user out.
+    """
+    if request.method == "DELETE":
+        logout(request)
+        response = HttpResponse(status=204)
+        next = request.GET.get('next')
+        if not next:
+            next = settings.LOGGIN_REDIRECT_URL
+        response['HX-Redirect'] = next
+        return response
+    else:
+        return render(request, "core/logout.html", context={'next': request.GET.get('next')})
