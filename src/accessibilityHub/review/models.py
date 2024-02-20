@@ -9,12 +9,12 @@ from utils import decimal2Base36
 
 
 class Owner(models.Model):
-    """Represents an owner of a tool.
-    """
+    """Represents an owner of a tool."""
+
     name = models.CharField(max_length=128)
     url = models.URLField()
     description = models.TextField(null=True, blank=True)
-    slug = models.SlugField(max_length=128, default='')
+    slug = models.SlugField(max_length=128, default="")
     verified = models.BooleanField(default=False)
 
     def __str__(self):
@@ -22,6 +22,7 @@ class Owner(models.Model):
         Mainly for admin site.
         """
         return f"Owner: {self.name}"
+
     @classmethod
     def allVerified(cls):
         """Return all verified Owner objects."""
@@ -36,25 +37,25 @@ class Owner(models.Model):
 
     @property
     def base36Id(self):
-        """Returns the base36 equivalent of the owner's id.
-        """
+        """Returns the base36 equivalent of the owner's id."""
         return decimal2Base36(self.id)
 
 
 class Tool(models.Model):
-    """Represents a tool.
-    """
+    """Represents a tool."""
+
     name = models.CharField(max_length=128)
     url = models.URLField()
     description = models.TextField(null=True, blank=True)
-    owner = models.ForeignKey(Owner, on_delete=models.CASCADE, related_name='tools')
-    slug = models.SlugField(max_length=128, default='')
+    owner = models.ForeignKey(Owner, on_delete=models.CASCADE, related_name="tools")
+    slug = models.SlugField(max_length=128, default="")
     verified = models.BooleanField(default=False)
 
     @classmethod
     def allVerified(cls):
         """Return all verified Tool objects."""
         return cls.objects.filter(verified=True, owner__verified=True)
+
     def save(self, *args, **kwargs):
         """Does some tasks before saving the object.
         Primarily add some fields to the model.
@@ -76,10 +77,10 @@ class Tool(models.Model):
 
 
 class Review(models.Model):
-    """Represents a review of a tool.
-    """
+    """Represents a review of a tool."""
+
     rating = models.PositiveIntegerField(validators=[MaxValueValidator(5)])
     comment = models.TextField(null=False, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
-    tool = models.ForeignKey(Tool, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reviews")
+    tool = models.ForeignKey(Tool, on_delete=models.CASCADE, related_name="reviews")
     createdAt = models.DateTimeField(default=timezone.now)

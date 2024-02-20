@@ -9,7 +9,7 @@
 	<h1>{{ tool.name }}</h1>
 	<p>Website: <a href="{{ tool.url }}">{{ tool.url }}</a></p>
 	<p> Average rating: {% if tool.avgRating is None %}No rating yet.{% else %}{{ tool.avgRating }}{% endif %} out of 5</p>
-	<p>Owner: <a href="{% url 'review:owner' slug=owner.slug base36Id=owner.base36Id %}">{{ owner.name }}</a></p>
+	<p>Owner: <a href="{% url 'review:owner' base36Id=owner.base36Id %}">{{ owner.name }}</a></p>
 	<p>{{ tool.description }}</p>
 </article>
 <h2>Comments</h2>

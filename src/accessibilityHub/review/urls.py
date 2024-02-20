@@ -9,12 +9,12 @@ app_name = "review"
 urlpatterns = [
         path("", views.index, name="index"),
         path(
-            "<str:slug>_<str:base36Id>",
+            "owners/<str:base36Id>/index.html",
             views.owner,
             name="owner"
             ),
         path(
-            "<str:ownerSlug>_<str:ownerBase36Id>/<str:slug>",
+            "owners/<str:ownerBase36Id>/tools/<str:slug>/index.html",
             views.tool,
             name='tool'
             ),

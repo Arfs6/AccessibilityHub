@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, Http404
 
 from .forms import ReviewForm, OwnerForm
 from .models import Tool, Owner, Review
@@ -17,14 +17,16 @@ def index(request: HttpRequest) -> HttpResponse:
     return render(request, 'review/index.html', context)
 
 
-def owner(request: HttpRequest, slug: str, base36Id: str) -> HttpResponse:
+def owner(request: HttpRequest, base36Id: str) -> HttpResponse:
     """Displays the owner's page.
     parameters:
     - request: request object passed by django.
-    - slug: slug gotten from url, representing the owner's name.'
     - base36Id: id of owner converted to base36.
     """
-    owner = get_object_or_404(Owner, pk=base362Decimal(base36Id), slug=slug, verified=True)
+    try:
+        owner = Owner.allVerified().get(pk=base362Decimal(base36Id))
+    except Owner.DoesNotExist:
+        raise Http404(f"Owner with id <{base36Id}> not found.")
     context = {
             'owner': owner,
             'tools': owner.tools.filter(verified=True).all(),
@@ -32,16 +34,16 @@ def owner(request: HttpRequest, slug: str, base36Id: str) -> HttpResponse:
     return render(request, 'review/owner.html', context)
 
 
-def tool(request: HttpRequest, ownerSlug: str, ownerBase36Id: str, slug: str) -> HttpResponse:
+def tool(request: HttpRequest, ownerBase36Id: str, slug: str) -> HttpResponse:
     """Displays a tool and it's reviews if any.
     parameters:
     - request: request object passed by django.
     - slug: slug name of tool, gotten from url.
     """
-    owner = get_object_or_404(
-        Owner, pk=base362Decimal(ownerBase36Id), slug=ownerSlug,
-        verified=True
-    )
+    try:
+        owner = Owner.allVerified().get(pk=base362Decimal(ownerBase36Id))
+    except Owner.DoesNotExist:
+        raise Http404(f"Owner with id <{ownerBase36Id}> could not be found.")
     tool = get_object_or_404(owner.tools, slug=slug, verified=True)
     if request.user.is_authenticated:
         # display form for editing / creating review.
