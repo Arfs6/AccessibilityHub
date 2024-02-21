@@ -1,4 +1,4 @@
-{% extends "core/base.html" %}
+{% extends baseTemplate %}
 
 {% block title %}
 <title>Tool Reviews Index | Accessibility Hub</title>
@@ -15,7 +15,7 @@
 {% endif %}
 <p>Here are all the tools:</p>
 {% for tool in tools %}
-<h3><a href="{% url 'review:tool' ownerBase36Id=tool.owner.base36Id slug=tool.slug %}">{{ forloop.counter }}. {{ tool.name }}</a></h3>
+<h3><a href="{% url 'review:tool' ownerBase36Id=tool.owner.base36Id toolSlug=tool.slug %}">{{ forloop.counter }}. {{ tool.name }}</a></h3>
 <p>Owner: <a href="{% url 'review:owner' base36Id=tool.owner.base36Id %}">{{ tool.owner.name }}</a></p>
 <p>Rating: {% if tool.avgRating is None %}No rating yet.{% else %}{{ tool.avgRating }}{% endif %}</p>
 <p>{{ tool.description }}

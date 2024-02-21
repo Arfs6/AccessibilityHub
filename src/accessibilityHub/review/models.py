@@ -77,10 +77,18 @@ class Tool(models.Model):
 
 
 class Review(models.Model):
-    """Represents a review of a tool."""
-
-    rating = models.PositiveIntegerField(validators=[MaxValueValidator(5)])
+    """Represents a review of a tool.
+    """
+    ratingChoices = [
+        (1, "Non-Accessible"),
+        (2, "Partially Accessible"),
+        (3, "Mostly Accessible"),
+        (4, "Highly Accessible"),
+        (5, "Fully Accessible")
+    ]
+    rating = models.PositiveSmallIntegerField(choices=ratingChoices)
     comment = models.TextField(null=False, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reviews")
     tool = models.ForeignKey(Tool, on_delete=models.CASCADE, related_name="reviews")
     createdAt = models.DateTimeField(default=timezone.now)
+    updatedAt = models.DateTimeField(default=timezone.now)

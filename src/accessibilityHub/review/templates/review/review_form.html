@@ -1,0 +1,7 @@
+<form hx-{% if formInstanceState.adding %}post{% else %}put{% endif %}="{% url 'review:tool' ownerBase36Id=owner.base36Id toolSlug=tool.slug %}" hx-target="#main-content" hx-swap="inner">
+	{% csrf_token %}
+	{{ form }}
+	<input type="submit" value="submit">
+	<p>{{ form.instance }}</p>
+	<p>{{ formInstanceState.adding }}</p>
+		</form>

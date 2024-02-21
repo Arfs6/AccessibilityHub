@@ -7,14 +7,14 @@ from . import views
 
 app_name = "review"
 urlpatterns = [
-        path("", views.index, name="index"),
+        path("index.html", views.index, name="index"),
         path(
             "owners/<str:base36Id>/index.html",
             views.owner,
             name="owner"
             ),
         path(
-            "owners/<str:ownerBase36Id>/tools/<str:slug>/index.html",
+            "owners/<str:ownerBase36Id>/<str:toolSlug>/index.html",
             views.tool,
             name='tool'
             ),
@@ -22,5 +22,10 @@ urlpatterns = [
         "new",
         views.newTool,
         name="newTool"
+    ),
+    path(
+        "owners/<str:ownerBase36Id>/<str:toolSlug>/<int:userId>.html",
+        views.userReview,
+        name='userReview'
     )
         ]
