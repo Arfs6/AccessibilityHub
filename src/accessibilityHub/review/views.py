@@ -70,7 +70,7 @@ def tool(request: HttpRequest, ownerBase36Id: str, toolSlug: str) -> HttpRespons
     return render(request, "review/tool.html", context={
         "owner": owner,
         "tool": tool,
-        "reviews": tool.reviews.all(),
+        "reviews": tool.reviews.exclude(comment='').all(),
         "form": form,
         "formInstanceState": form.instance._state,
     })
