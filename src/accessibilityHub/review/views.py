@@ -48,7 +48,7 @@ def tool(request: HttpRequest, ownerBase36Id: str, toolSlug: str) -> HttpRespons
     except Owner.DoesNotExist:
         raise Http404(f"Owner with id <{ownerBase36Id}> could not be found.")
     tool = get_object_or_404(owner.tools, slug=toolSlug, verified=True)
-    userReview = Review.objects.filter(tool=tool, user=request.user).first()
+    userReview = Review.objects.filter(tool=tool, user=request.user).first() if request.user.is_authenticated else None
     if request.method == "GET":
         form = None
         if request.user.is_authenticated:
@@ -72,7 +72,7 @@ def tool(request: HttpRequest, ownerBase36Id: str, toolSlug: str) -> HttpRespons
         "tool": tool,
         "reviews": tool.reviews.exclude(comment='').all(),
         "form": form,
-        "formInstanceState": form.instance._state,
+        "formInstanceState": form.instance._state if form is not None else None,
     })
 
 
