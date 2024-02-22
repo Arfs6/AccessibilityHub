@@ -27,5 +27,10 @@ urlpatterns = [
         "owners/<str:ownerBase36Id>/<str:toolSlug>/<int:userId>.html",
         views.userReview,
         name='userReview'
-    )
+    ),
+    path(
+        "search.html",
+        views.search,
+        name="search"
+    ),
         ]

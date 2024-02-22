@@ -7,17 +7,24 @@
 {% block content %}
 <h1>Tools Reviews</h1>
 <p>Discover tools reviewed and rated by the community! Your review and rating are vital to help others make informed decisions on accessible tools. Join our inclusive community, share your insights, and together, let's make the digital world more accessible for everyone.</p>
-<h2>Tools</h2>
 {% if user.is_authenticated %}
 <p><a href="{% url 'review:newTool' %}">Request new tool</a></p>
 {% else %}
 <p><a href="{% url 'core:login' %}">Login</a> to request new tool</p>
 {% endif %}
-<p>Here are all the tools:</p>
-{% for tool in tools %}
-<h3><a href="{% url 'review:tool' ownerBase36Id=tool.owner.base36Id toolSlug=tool.slug %}">{{ forloop.counter }}. {{ tool.name }}</a></h3>
-<p>Owner: <a href="{% url 'review:owner' base36Id=tool.owner.base36Id %}">{{ tool.owner.name }}</a></p>
-<p>Rating: {% if tool.avgRating is None %}No rating yet.{% else %}{{ tool.avgRating }}{% endif %}</p>
-<p>{{ tool.description }}
-{% endfor %}
+<section aria-label="search">
+	<form hx-get="{% url 'review:search' %}" hx-target="#tool-listing" hx-swap="inner">
+		{% csrf_token %}
+		<label for="search-term">Search:</label>
+		<input type="text" id="search-term" name="searchTerm" required>
+		<input type="submit" value="Search">
+	</form>
+</section>
+<section aria-label="Tool listing" id="tool-listing">
+	<h2>All Tools</h2>
+	<p>Here is a list of all the tools that has been created.</p>
+	{% for tool in tools %}
+	{% include 'review/toolObject.html' with tool=tool %}
+	{% endfor %}
+</section>
 {% endblock %}

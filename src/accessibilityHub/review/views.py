@@ -93,3 +93,15 @@ def userReview(request: HttpRequest, ownerBase36Id: str, toolSlug: str, userId: 
     - toolSlug: The slug of a tool owned by @owner.
     - userId: Id of a user.
     """
+
+
+@require_http_methods(["GET"])
+def search(request: HttpRequest) -> HttpResponse:
+    """Search view.
+    """
+    if request.GET.get('searchTerm') is None:
+        return HttpResponse("Search term not provided.".encode(), status=400)
+    tools = Tool.objects.filter(name__icontains=request.GET['searchTerm']).all()
+    return render(request, "review/search.html", {
+        "tools": tools,
+    })
