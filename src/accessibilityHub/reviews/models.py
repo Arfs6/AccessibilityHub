@@ -16,6 +16,8 @@ class Owner(models.Model):
     description = models.TextField(null=True, blank=True)
     slug = models.SlugField(max_length=128, default="")
     verified = models.BooleanField(default=False)
+    createdAt = models.DateTimeField(auto_now_add=True)
+    updatedAt = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         """Returns a string representation of the object.
@@ -50,6 +52,8 @@ class Tool(models.Model):
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE, related_name="tools")
     slug = models.SlugField(max_length=128, default="")
     verified = models.BooleanField(default=False)
+    createdAt = models.DateTimeField(auto_now_add=True)
+    updatedAt = models.DateTimeField(auto_now_add=True)
 
     @classmethod
     def allVerified(cls):
@@ -90,5 +94,5 @@ class Review(models.Model):
     comment = models.TextField(null=False, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reviews")
     tool = models.ForeignKey(Tool, on_delete=models.CASCADE, related_name="reviews")
-    createdAt = models.DateTimeField(default=timezone.now)
-    updatedAt = models.DateTimeField(default=timezone.now)
+    createdAt = models.DateTimeField(auto_now_add=True)
+    updatedAt = models.DateTimeField(auto_now_add=True)
