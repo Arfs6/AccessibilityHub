@@ -7,18 +7,22 @@ from . import views
 app_name = "discussions"
 urlpatterns = [
     path(
-        "index.html",
+        "",
         views.landing,
         name="landing",
     ),
-    path("topics/index.html", views.index, name="index"),
     path(
-        "topics/new.html",
+        "topics",
+        views.index,
+        name="index",
+    ),
+    path(
+        "topics/new",
         views.newTopic,
         name="newTopic",
     ),
     path(
-        "topics/<str:base36Id>/index.html",
+        "topics/<str:base36Id>",
         views.topicPage,
         name="topicPage",
     ),
