@@ -1,0 +1,32 @@
+{% extends baseTemplate %}
+
+{% block title %}
+<title>Index - Discussions | Accessibility Hub</title>
+{% endblock %}
+
+{% block content %}
+<h1>Discussions</h1>
+<nav role="Discussions navigation">
+	{% if request.user.is_authenticated %}
+	<p><a href="{% url 'discussions:newTopic' %}">New Topic</a></p>
+	{% else %}
+	<p><a href="{% url 'core:login' %}">Login</a> to create topic</p>
+	{% endif %}
+	<form hx-get="{% url 'discussions:search' %}" role="Search" hx-swap="inner" hx-target="#topics-listing">
+		{% csrf_token %}
+		<input type="text" name="q" placeholder="Search" required>
+		<input type="submit" value="search">
+	</form>
+</nav>
+<section aria-label="Topics listing" id="topics-listing">
+	<h2>Latest Topics</h2>
+	{% if latestTopics %}
+	{% for topic in latestTopics %}
+	<h3><a href="{% url 'discussions:topicPage' topic.base36Id %}">{{ topic.name }}</a></h3>
+	<p>Description: {{ topic.discription }}</p>
+	{% endfor %}
+	{% else %}
+	<p>No topics yet.</p>
+	{% endif %}
+</section>
+{% endblock %}
