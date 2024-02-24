@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, request
 from django.views.decorators.http import require_http_methods
 from django.urls import reverse
 from django_htmx.http import HttpResponseClientRedirect
@@ -18,12 +18,15 @@ def landing(request: HttpRequest) -> HttpResponse:
 @require_http_methods(["GET", "POST"])
 @require_http_methods(["GET"])
 def index(request: HttpRequest) -> HttpResponse:
-    """Index page for discussions.
-    """
+    """Index page for discussions."""
     latestTopics = Topic.objects.all()[:5]
-    return render(request, "discussions/index.html", {
-        "latestTopics": latestTopics,
-    })
+    return render(
+        request,
+        "discussions/index.html",
+        {
+            "latestTopics": latestTopics,
+        },
+    )
 
 
 def newTopic(request: HttpRequest) -> HttpResponse:
@@ -36,7 +39,7 @@ def newTopic(request: HttpRequest) -> HttpResponse:
             form.instance.createdBy = request.user
             form.instance.save()
             return HttpResponseClientRedirect(
-                reverse("discussions:topicPage", args=(form.instance.base36Id, ))
+                reverse("discussions:topicPage", args=(form.instance.base36Id,))
             )
     return render(
         request,
@@ -63,8 +66,29 @@ def topicPage(request: HttpRequest, base36Id: str) -> HttpResponse:
             _form.instance.save()
         else:
             form = _form  # Show the user the errors
-    return render(request, "discussions/topic.html", {
-        "topic": topic,
-        "comments": topic.comments.all(),
-        "form": form,
-    })
+    return render(
+        request,
+        "discussions/topic.html",
+        {
+            "topic": topic,
+            "comments": topic.comments.all(),
+            "form": form,
+        },
+    )
+
+
+@require_http_methods(["GET"])
+def search(request: HttpRequest) -> HttpResponse:
+    """Searches for a topic."""
+    if not request.GET.get("q"):
+        return HttpResponse(
+            "Invalid query. Query must be a non-empty string.".encode(), status=400
+        )
+    topics = Topic.objects.filter(name__icontains=request.GET.get("q")).all()
+    return render(
+        request,
+        "discussions/searchResults.html",
+        {
+            "topics": topics,
+        },
+    )

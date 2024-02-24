@@ -11,11 +11,7 @@ urlpatterns = [
         views.landing,
         name="landing",
     ),
-    path(
-        "topics/index.html",
-        views.index,
-        name="index"
-    ),
+    path("topics/index.html", views.index, name="index"),
     path(
         "topics/new.html",
         views.newTopic,
@@ -25,5 +21,10 @@ urlpatterns = [
         "topics/<str:base36Id>/index.html",
         views.topicPage,
         name="topicPage",
+    ),
+    path(
+        "search",
+        views.search,
+        name="search",
     ),
 ]

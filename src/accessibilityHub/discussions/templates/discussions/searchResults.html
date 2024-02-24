@@ -1,0 +1,11 @@
+<h2>Search results</h2>
+{% if topics %}
+{% for topic in topics %}
+<article>
+	<h3><a href="{% url 'discussions:topicPage' topic.base36Id %}">{{ topic.name }}</a></h3>
+	<p>{{ topic.description }}</p>
+</article>
+{% endfor %}
+{% else %}
+<p>Your search did not match any topic. Please try a different search term.</p>
+{% endif %}
