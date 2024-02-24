@@ -2,8 +2,8 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed
 from django.contrib.auth.models import User
 
-from review.forms import ReviewForm, OwnerForm, ToolForm
-from review.models import Review, Tool, Owner
+from reviews.forms import ReviewForm, OwnerForm, ToolForm
+from reviews.models import Review, Tool, Owner
 
 
 def createReview(request: HttpRequest, toolId: int) -> HttpResponse:

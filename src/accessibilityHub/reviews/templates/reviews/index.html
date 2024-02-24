@@ -8,12 +8,12 @@
 <h1>Tools Reviews</h1>
 <p>Discover tools reviewed and rated by the community! Your review and rating are vital to help others make informed decisions on accessible tools. Join our inclusive community, share your insights, and together, let's make the digital world more accessible for everyone.</p>
 {% if user.is_authenticated %}
-<p><a href="{% url 'review:newTool' %}">Request new tool</a></p>
+<p><a href="{% url 'reviews:newTool' %}">Request new tool</a></p>
 {% else %}
 <p><a href="{% url 'core:login' %}">Login</a> to request new tool</p>
 {% endif %}
 <section aria-label="search">
-	<form hx-get="{% url 'review:search' %}" hx-target="#tool-listing" hx-swap="inner">
+	<form hx-get="{% url 'reviews:search' %}" hx-target="#tool-listing" hx-swap="inner">
 		{% csrf_token %}
 		<label for="search-term">Search:</label>
 		<input type="text" id="search-term" name="searchTerm" required>
@@ -24,7 +24,7 @@
 	<h2>All Tools</h2>
 	<p>Here is a list of all the tools that has been created.</p>
 	{% for tool in tools %}
-	{% include 'review/toolObject.html' with tool=tool %}
+	{% include 'reviews/toolObject.html' with tool=tool %}
 	{% endfor %}
 </section>
 {% endblock %}

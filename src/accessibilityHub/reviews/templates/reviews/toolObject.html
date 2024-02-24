@@ -1,0 +1,6 @@
+<article>
+	<h3><a href="{% url 'reviews:tool' ownerBase36Id=tool.owner.base36Id toolSlug=tool.slug %}">{{ tool.name }}</a></h3>
+	<p>Owner: <a href="{% url 'reviews:owner' base36Id=tool.owner.base36Id %}">{{ tool.owner.name }}</a></p>
+	<p>Rating: {% if tool.avgRating is None %}No rating yet.{% else %}{{ tool.avgRating }}{% endif %}</p>
+	<p>{{ tool.description }}
+</article>

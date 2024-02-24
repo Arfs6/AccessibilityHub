@@ -16,7 +16,7 @@ def index(request: HttpRequest) -> HttpResponse:
     context = {
         "tools": tools,
     }
-    return render(request, "review/index.html", context)
+    return render(request, "reviews/index.html", context)
 
 
 def owner(request: HttpRequest, base36Id: str) -> HttpResponse:
@@ -33,7 +33,7 @@ def owner(request: HttpRequest, base36Id: str) -> HttpResponse:
         "owner": owner,
         "tools": owner.tools.filter(verified=True).all(),
     }
-    return render(request, "review/owner.html", context)
+    return render(request, "reviews/owner.html", context)
 
 
 @require_http_methods(['GET', 'POST', 'PUT'])
@@ -52,7 +52,7 @@ def tool(request: HttpRequest, ownerBase36Id: str, toolSlug: str) -> HttpRespons
     if request.method == "GET":
         form = None
         if request.user.is_authenticated:
-            # display form for editing / creating review.
+            # display form for editing / creating reviews.
             form = ReviewForm(instance=userReview) if userReview else ReviewForm()
     elif request.method == "POST":
         form = ReviewForm(request.POST)
@@ -67,7 +67,7 @@ def tool(request: HttpRequest, ownerBase36Id: str, toolSlug: str) -> HttpRespons
         form = ReviewForm(data, instance=userReview)
         if form.is_valid():
             form.save()
-    return render(request, "review/tool.html", context={
+    return render(request, "reviews/tool.html", context={
         "owner": owner,
         "tool": tool,
         "reviews": tool.reviews.exclude(comment='').all(),
@@ -83,7 +83,7 @@ def newTool(request: HttpRequest) -> HttpResponse:
         "title": "Request New Tool",
         "form": form,
     }
-    return render(request, "review/new_tool.html", context)
+    return render(request, "reviews/new_tool.html", context)
 
 
 def userReview(request: HttpRequest, ownerBase36Id: str, toolSlug: str, userId: int):
@@ -102,6 +102,6 @@ def search(request: HttpRequest) -> HttpResponse:
     if request.GET.get('searchTerm') is None:
         return HttpResponse("Search term not provided.".encode(), status=400)
     tools = Tool.objects.filter(name__icontains=request.GET['searchTerm']).all()
-    return render(request, "review/search.html", {
+    return render(request, "reviews/search.html", {
         "tools": tools,
     })

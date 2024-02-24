@@ -5,7 +5,7 @@ from django.urls import path
 
 from . import views
 
-app_name = "review"
+app_name = "reviews"
 urlpatterns = [
     path(
         "",

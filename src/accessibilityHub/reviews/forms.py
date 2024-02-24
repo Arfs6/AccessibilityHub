@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Forms for review app in accessibilityHub project."""
+"""Forms for reviews app in accessibilityHub project."""
 
 from django import forms
 
