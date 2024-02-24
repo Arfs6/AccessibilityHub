@@ -1,0 +1,37 @@
+{% extends baseTemplate %}
+
+{% block title %}
+<title>{{ topic.name }} - Discussions | AccessibilityHub</title>
+{% endblock %}
+
+{% block content %}
+<section aria-label="Topic info">
+<article>
+<h1>{{ topic.name }}</h1>
+<p>Description: {{ topic.description }}</p>
+</article>
+</section>
+<section aria-label="Comments">
+	<h2>Comments</h2>
+	{% if comments %}
+	{% for comment in comments %}
+	<article>
+		<h3>Comment by {{ comment.createdBy.get_full_name }}</h3>
+		<p>{{ comment.content }}</p>
+	</article>
+	{% endfor %}
+	{% else %}
+	<p>No comments yet.</P>
+	{% endif %}
+</section>
+<h2>Add a comment</h2>
+{% if request.user.is_authenticated %}
+<form hx-post="{% url 'discussions:topicPage' topic.base36Id %}" hx-target="#main-content" hx-swap="inner" role="form">
+	{% csrf_token %}
+	{{ form }}
+	<input type="submit" value="Comment">
+</form>
+{% else %}
+<p>You need to <a href="{% url 'core:login' %}?next={{ request.path }}">login</a> to add a comment.</p>
+{% endif %}
+{% endblock %}

@@ -1,10 +1,23 @@
 {% extends baseTemplate %}
 
 {% block title %}
-<title>Discussions | Accessibility Hub</title>
+<title>Index - Discussions | Accessibility Hub</title>
 {% endblock %}
 
 {% block content %}
 <h1>Discussions</h1>
-<p>Welcome to a hub of thought-provoking conversations dedicated to the world of accessibility! Here, you'll find a vibrant community of individuals passionate about creating inclusive experiences for everyone. Whether you're a seasoned expert or just starting your journey, this space offers an open platform.</p>
+{% if request.user.is_authenticated %}
+<p><a href="{% url 'discussions:newTopic' %}">New Topic</a></p>
+{% else %}
+<p><a href="{% url 'core:login' %}">Login</a> to create topic</p>
+{% endif %}
+<h2>Latest Topics</h2>
+{% if latestTopics %}
+{% for topic in latestTopics %}
+<h3><a href="{% url 'discussions:topicPage' topic.base36Id %}">{{ topic.name }}</a></h3>
+<p>Description: {{ topic.discription }}</p>
+{% endfor %}
+{% else %}
+<p>No topics yet.</p>
+{% endif %}
 {% endblock %}
