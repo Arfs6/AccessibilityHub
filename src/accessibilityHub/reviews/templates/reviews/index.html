@@ -6,20 +6,22 @@
 
 {% block content %}
 <h1>Tools Reviews</h1>
-<p>Discover tools reviewed and rated by the community! Your review and rating are vital to help others make informed decisions on accessible tools. Join our inclusive community, share your insights, and together, let's make the digital world more accessible for everyone.</p>
-{% if user.is_authenticated %}
-<p><a href="{% url 'reviews:newTool' %}">Request new tool</a></p>
-{% else %}
-<p><a href="{% url 'core:login' %}">Login</a> to request new tool</p>
-{% endif %}
-<section aria-label="search">
-	<form hx-get="{% url 'reviews:search' %}" hx-target="#tool-listing" hx-swap="inner">
+<p>Discover tools reviewed and rated by the community! Your review and rating are vital to help others make informed
+	decisions on accessible tools. Join our inclusive community, share your insights, and together, let's make the
+	digital world more accessible for everyone.</p>
+<nav aria-label="Reviews">
+	{% if user.is_authenticated %}
+	<p><a href="{% url 'reviews:newTool' %}">Request new tool</a></p>
+	{% else %}
+	<p><a href="{% url 'core:login' %}">Login</a> to request new tool</p>
+	{% endif %}
+	<form hx-get="{% url 'reviews:search' %}" hx-target="#tool-listing" hx-swap="inner" role="search">
 		{% csrf_token %}
 		<label for="search-term">Search:</label>
 		<input type="text" id="search-term" name="searchTerm" required>
 		<input type="submit" value="Search">
 	</form>
-</section>
+</nav>
 <section aria-label="Tool listing" id="tool-listing">
 	<h2>All Tools</h2>
 	<p>Here is a list of all the tools that has been created.</p>

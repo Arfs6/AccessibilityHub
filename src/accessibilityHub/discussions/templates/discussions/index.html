@@ -6,7 +6,7 @@
 
 {% block content %}
 <h1>Discussions</h1>
-<nav role="Discussions navigation">
+<nav aria-label="Discussions">
 	{% if request.user.is_authenticated %}
 	<p><a href="{% url 'discussions:newTopic' %}">New Topic</a></p>
 	{% else %}
