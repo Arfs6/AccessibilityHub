@@ -1,4 +1,4 @@
-{% extends 'core/base.html' %}
+{% extends baseTemplate %}
 
 {% block title %}
 <title>About | Accessibility Hub</title>
@@ -11,7 +11,7 @@
 	<li>Creating a platform for users to review tools.</li>
 	<li>Creating aplatform for discussion on accessibility related topics.</li>
 	</ol>
-	<h2><a href="{% url 'review:index' %}">Reviews</a></h2>
+	<h2><a href="{% url 'reviews:index' %}">Reviews</a></h2>
 	<p>The reviews feature aims in collecting accessiility related information about a tool in a single page. This information will be gotten from users of accessibility hub. This will make getting information on the accessibility of a tool straight forward depending on the number and quality of info supplied by the community. This is going to be very useful for both users of tools and creators that are concerned with accessibility.</p>
 	<h2>Discussion</h2>
 	<p>Unlike reviews, discussion aren't tied to any tool, and haven't been implemented yet. The idea is to create a platform where topics on accessibility could be discussed. This could be general topics, recommendation / suggestion and even questions. With enough of pages like this indexed by search engines, one can just search for solution to his / her problem and get a very useful info.</p>

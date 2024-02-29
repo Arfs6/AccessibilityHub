@@ -1,4 +1,4 @@
-{% extends "core/base.html" %}
+{% extends baseTemplate %}
 
 {% block title %}
 <title>Create Account | Accessibility Hub</title>
@@ -8,81 +8,10 @@
 <section>
 	<form action="{% url 'core:createAccount' %}" method="POST">
 		{% csrf_token %}
-		{% if form.non_field_errors %}
-		<p>{{ form.non_field_errors }}
-		{% endif %}
-		<tr>
-			<th>{{ form.firstName.label_tag }}</th>
-			<td>
-		{{ form.firstName.errors }}
-		{{ form.firstName }}
-		{% if form.firstname.help_text %}
-		<br>
-		<p class="helptext">{{ form.firstname.help_text }}</p>
-		{% endif %}
-		</td>
-		</tr>
-
-		<tr>
-    <th>{{ form.lastName.label_tag }}</th>
-    <td>
-        {{ form.lastName.errors }}
-        {{ form.lastName }}
-        {% if form.lastName.help_text %}
-            <br>
-            <p class="helptext">{{ form.lastName.help_text }}</p>
-        {% endif %}
-    </td>
-</tr>
-
-<tr>
-    <th>{{ form.username.label_tag }}</th>
-    <td>
-        {{ form.username.errors }}
-        {{ form.username }}
-        {% if form.username.help_text %}
-            <br>
-            <p class="helptext">{{ form.username.help_text }}</p>
-        {% endif %}
-    </td>
-</tr>
-
-<tr>
-    <th>{{ form.email.label_tag }}</th>
-    <td>
-        {{ form.email.errors }}
-        {{ form.email }}
-        {% if form.email.help_text %}
-            <br>
-            <p class="helptext">{{ form.email.help_text }}</p>
-        {% endif %}
-    </td>
-</tr>
-
-<tr>
-    <th>{{ form.password1.label_tag }}</th>
-    <td>
-        {{ form.password1.errors }}
-        {{ form.password1 }}
-        {% if form.password1.help_text %}
-            <br>
-            <p class="helptext">{{ form.password1.help_text }}</p>
-        {% endif %}
-    </td>
-</tr>
-
-<tr>
-    <th>{{ form.password2.label_tag }}</th>
-    <td>
-        {{ form.password2.errors }}
-        {{ form.password2 }}
-        {% if form.password2.help_text %}
-            <br>
-            <p class="helptext">{{ form.password2.help_text }}</p>
-        {% endif %}
-    </td>
-</tr>
-<input type="hidden" name="next" value="{{ request.GET.next }}">
+		{{ form }}
+		{% if next %}
+<input type="hidden" name="next" value="{{ next }}">
+{% endif %}
 
 		<input type="submit" value="Create Account">
 		</form>

@@ -6,7 +6,8 @@
 <div class="right">
 	<nav>
 		<ul>
-			<li><a href="{% url 'review:index' %}"><span class="fas fa-list"></span>Reviews</a></li>
+			<li><a href="{% url 'reviews:index' %}"><span class="fas fa-list"></span>Reviews</a></li>
+			<li><a href="{% url 'discussions:landing' %}"><span class="fa-comments"></span>Discussions</a></li>
 			<li><a href="{% url 'core:about' %}"><span class="fas fa-info-circle"></span>About</a></li>
 			{% if user.is_authenticated %}
 			<li><a href="{% url 'core:logout' %}?next={{ request.path }}"><span class="fas fa-sign-out-alt"></span>Logout</a></li>

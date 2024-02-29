@@ -1,0 +1,17 @@
+{% extends baseTemplate %}
+
+{% block title %}
+<title>{{ owner.name }} | Accessibility Hub</title>
+{% endblock %}
+
+{% block content %}
+<h1>{{ owner.name }}</h1>
+<p>Website: <a href="{{ owner.url }}">{{ owner.url }}</a></p>
+<p>{{ owner.description }}</p>
+<h2>tools</h2>
+{% for tool in tools %}
+<h3><a href="{% url 'reviews:tool' ownerBase36Id=owner.base36Id toolSlug=tool.slug %}">{{ forloop.counter }}. {{ tool.name }}</a></h3>
+<p>Rating: {% if tool.avgRating is None %}No rating yet.{% else %}{{ tool.avgRating }}{% endif %}</p>
+<p>{{ tool.description }}
+{% endfor %}
+{% endblock %}
