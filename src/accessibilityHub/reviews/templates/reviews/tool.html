@@ -5,25 +5,30 @@
 {% endblock %}
 
 {% block content %}
-<article>
-	<h1>{{ tool.name }}</h1>
-	<p>Website: <a href="{{ tool.url }}">{{ tool.url }}</a></p>
-	<p> Average rating: {% if tool.avgRating is None %}No rating yet.{% else %}{{ tool.avgRating }} out of 5{% endif %}</p>
-	<p>Owner: <a href="{% url 'reviews:owner' base36Id=owner.base36Id %}">{{ owner.name }}</a></p>
-	<p>{{ tool.description }}</p>
-</article>
-<h2>Comments</h2>
-{% if not reviews %}
-<p>No comments yet.</p>
-{% else %}
-{% for review in reviews %}
-<article id="{{ review.user.id }}">
-	<h3>Comment by {{ review.user.get_full_name }}</h3>
-	<p>Rating: {{ review.rating }}</p>
-	<p>{{ review.comment  }}</p>
-</article>
-{% endfor %}
-{% endif %}
+<section aria-label="Tool info">
+	<article>
+		<h1>{{ tool.name }}</h1>
+		<p>Website: <a href="{{ tool.url }}">{{ tool.url }}</a></p>
+		<p> Average rating: {% if tool.avgRating is None %}No rating yet.{% else %}{{ tool.avgRating }} out of
+			5{% endif %}</p>
+		<p>Owner: <a href="{% url 'reviews:owner' base36Id=owner.base36Id %}">{{ owner.name }}</a></p>
+		<p>{{ tool.description }}</p>
+	</article>
+</section>
+<section aria-label="Comments">
+	<h2>Comments</h2>
+	{% if not reviews %}
+	<p>No comments yet.</p>
+	{% else %}
+	{% for review in reviews %}
+	<article id="{{ review.user.id }}">
+		<h3>Comment by {{ review.user.get_full_name }}</h3>
+		<p>Rating: {{ review.rating }}</p>
+		<p>{{ review.comment }}</p>
+	</article>
+	{% endfor %}
+	{% endif %}
+</section>
 
 <h2>Your rating</h2>
 {% if form is not None %}

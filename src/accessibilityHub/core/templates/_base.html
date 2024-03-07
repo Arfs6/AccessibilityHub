@@ -1,29 +1,44 @@
 <!DOCTYPE html>
 <!-- core/base.html -->
+{% load static %}
 <html lang="en">
+
 <head>
-    {% include "core/head.html" %}
-		{% block title %}{% endblock %}
+	{% include "core/head.html" %}
+	{% block title %}{% endblock %}
 </head>
+
 <body id="#body" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
-	<header>
-    {% include "core/header.html" %}
-    </header>
-    <h1>Demo</h1>
-    <p>Accessibility hub is currently in demo. All data would be wipedout when moving to production, so, you shouldn't rely on it, and you can do whatever you want with it.</p>
-    <main>
-    
-    <div class="main-content" id="main-content">
-        {% block content %}{% endblock %}
-    </div>
+	<div class="container">
+		<header>
+			{% include "core/header.html" %}
+		</header>
+		<main>
 
-    </main>
+			<h5 class="hide-on-med-and-down"><i>Your accessibility focused community</i></h5>
+			<h5 style="margin-top: 4rem;" class="hide-on-large-only"><i>Your accessibility focused
+					community</i></h5>
 
-    <footer>
-    <a href="#main-content">Back to top</a>
-    {% include "core/footer.html" %}
-    </footer>
-    <!-- Compiled and minified JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+			<section aria-label="Demo">
+				<h4>Demo</h4>
+				<p>Accessibility hub is currently in demo. All data would be wipedout when moving to
+					production, so, you shouldn't rely on it, and you can do whatever you want with
+					it.</p>
+			</section>
+			<div class="main-content" id="main-content">
+				{% block content %}{% endblock %}
+			</div>
+
+		</main>
+
+		<footer class="page-footer teal">
+			{% include "core/footer.html" %}
+		</footer>
+	</div>
+	<!-- Compiled and minified JavaScript -->
+	<script
+		src=" https://cdn.jsdelivr.net/npm/@materializecss/materialize@2.0.3/dist/js/materialize.min.js "></script>
+	<script src="{% static 'core/main.js' %}"></script>
 </body>
+
 </html>

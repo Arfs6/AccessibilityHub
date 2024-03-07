@@ -7,23 +7,32 @@
 {% block content %}
 <h1>Discussions</h1>
 <nav aria-label="Discussions">
-	{% if request.user.is_authenticated %}
-	<p><a href="{% url 'discussions:newTopic' %}">New Topic</a></p>
-	{% else %}
-	<p><a href="{% url 'core:login' %}">Login</a> to create topic</p>
-	{% endif %}
-	<form hx-get="{% url 'discussions:search' %}" role="Search" hx-swap="inner" hx-target="#topics-listing">
-		{% csrf_token %}
-		<input type="text" name="q" placeholder="Search" required>
-		<input type="submit" value="search">
-	</form>
+	<div class="row">
+		<div class="col s12 m12 l3">
+			<form hx-get="{% url 'discussions:search' %}" role="Search" hx-swap="inner"
+				hx-target="#topics-listing">
+				{% csrf_token %}
+				<label for="search-term" style="font-size: 1.3rem;"><i
+						class="material-icons">search</i></label>
+				<input type="text" name="q" placeholder="Search" required id="search-term">
+				<input type="submit" value="search">
+			</form>
+		</div>
+			<div class="col s12 m12 l3">
+				{% if request.user.is_authenticated %}
+				<p><a href="{% url 'discussions:newTopic' %}">New Topic</a></p>
+				{% else %}
+				<p><a href="{% url 'core:login' %}">Login</a> to create topic</p>
+				{% endif %}
+			</div>
+		</div>
 </nav>
 <section aria-label="Topics listing" id="topics-listing">
 	<h2>Latest Topics</h2>
 	{% if latestTopics %}
 	{% for topic in latestTopics %}
 	<h3><a href="{% url 'discussions:topicPage' topic.base36Id %}">{{ topic.name }}</a></h3>
-	<p>Description: {{ topic.discription }}</p>
+	<p>Description: {{ topic.description }}</p>
 	{% endfor %}
 	{% else %}
 	<p>No topics yet.</p>

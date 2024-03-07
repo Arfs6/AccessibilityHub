@@ -1,20 +1,18 @@
-<!-- templates/header.html -->
-<div class="left">
-	<p id="site-name"><a href="{% url 'core:home' %}">Accessibility Hub</a></p>
-	<p>Your accessibility focused community</p>
-</div>
-<div class="right">
-	<nav>
-		<ul>
-			<li><a href="{% url 'reviews:index' %}"><span class="fas fa-list"></span>Reviews</a></li>
-			<li><a href="{% url 'discussions:landing' %}"><span class="fa-comments"></span>Discussions</a></li>
-			<li><a href="{% url 'core:about' %}"><span class="fas fa-info-circle"></span>About</a></li>
-			{% if user.is_authenticated %}
-			<li><a href="{% url 'core:logout' %}?next={{ request.path }}"><span class="fas fa-sign-out-alt"></span>Logout</a></li>
-			{% else %}
-			<li><a href="{% url 'core:login' %}?next={{ request.path }}"><span class="fas fa-sign-in-alt"></span>Login</a></li>
-			<li><a href="{% url 'core:createAccount' %}?next={{ request.path }}"><span class="fas fa-user-plus"></span>Create Account</a></li>
-			{% endif %}
+<!-- Header template -->
+{% load static %}
+<nav class="teal z-depth3">
+	<div class="nav-wrapper">
+		<a href="{% url 'core:home' %}" class="blue-text text-darken-4 brand-logo">
+			<span style="font-style: italic;" class="red-text"><b>A</b></span>ccessibility <span class="red-text"><b>H</b></span>ub
+		</a>
+		<ul class="right hide-on-med-and-down">
+			{% include 'core/siteNavigation.html' %}
 		</ul>
-	</nav>
-</div>
+		<a href="#" data-target="mobile-sidenav" class="sidenav-trigger">
+			<i class="material-icons">menu</i>
+		</a>
+		<ul class="sidenav hide-on-large-only" id="mobile-sidenav">
+			{% include 'core/siteNavigation.html'%}
+		</ul>
+	</div>
+</nav>
