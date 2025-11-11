@@ -6,6 +6,8 @@
 
 {% block content %}
 <section>
+	<H1>Join us</h1>
+	<p>You are one step away from being a part of us. It's easy, just fill the form below.</p>
 	<form action="{% url 'core:createAccount' %}" method="POST">
 		{% csrf_token %}
 		{{ form }}

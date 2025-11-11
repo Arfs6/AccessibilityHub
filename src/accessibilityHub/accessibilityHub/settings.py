@@ -29,6 +29,8 @@ if devEnv:
     DEBUG = True
 
 ALLOWED_HOSTS = ["accessibilityhub.tech", "www.accessibilityhub.tech", "localhost"]
+if devEnv:
+    ALLOWED_HOSTS.append("infinite-generous-kite.ngrok-free.app")
 
 
 # Application definition
