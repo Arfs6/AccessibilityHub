@@ -29,7 +29,6 @@ dependencies = [
 "django-htmx",
 "fabric",
 "unicorn",
-"mysqlclient",
 ]
 
 [project.urls]
