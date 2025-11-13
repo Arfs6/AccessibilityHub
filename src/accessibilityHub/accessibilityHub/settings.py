@@ -27,7 +27,7 @@ SECRET_KEY = "django-insecure-$s(*3x4qh=l*j3rtcn(0qcb@aez+@i50%tx=&2_o6dr!36u*0l
 if devEnv:
     DEBUG = True
 
-ALLOWED_HOSTS = ["accessibilityhub.tech", "www.accessibilityhub.tech", "localhost"]
+ALLOWED_HOSTS = ["arfs6.pythonanywhere.com", "localhost"]
 if devEnv:
     ALLOWED_HOSTS.append("infinite-generous-kite.ngrok-free.app")
 
