@@ -53,8 +53,8 @@ omit = [
 ]
 
 [tool.coverage.paths]
-accessibilityhub = ["src/accessibilityhub", "*/accessibilityhub/src/accessibilityhub"]
-tests = ["tests", "*/accessibilityhub/tests"]
+accessibilityHub = ["src/accessibilityHub", "*/accessibilityHub/src/accessibilityHub"]
+tests = ["tests", "*/accessibilityHub/tests"]
 
 [tool.coverage.report]
 exclude_lines = [
