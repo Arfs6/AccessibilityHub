@@ -5,7 +5,6 @@ from django.views.decorators.http import require_http_methods
 
 from .forms import ReviewForm, OwnerForm
 from .models import Tool, Owner, Review
-from utils import base362Decimal
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -26,7 +25,7 @@ def owner(request: HttpRequest, base36Id: str) -> HttpResponse:
     - base36Id: id of owner converted to base36.
     """
     try:
-        owner = Owner.allVerified().get(pk=base362Decimal(base36Id))
+        owner = Owner.allVerified().get(pk=int(base36Id, 36))
     except Owner.DoesNotExist:
         raise Http404(f"Owner with id <{base36Id}> not found.")
     context = {
@@ -44,7 +43,7 @@ def tool(request: HttpRequest, ownerBase36Id: str, toolSlug: str) -> HttpRespons
     - slug: slug name of tool, gotten from url.
     """
     try:
-        owner = Owner.allVerified().get(pk=base362Decimal(ownerBase36Id))
+        owner = Owner.allVerified().get(pk=int(ownerBase36Id, 36))
     except Owner.DoesNotExist:
         raise Http404(f"Owner with id <{ownerBase36Id}> could not be found.")
     tool = get_object_or_404(owner.tools, slug=toolSlug, verified=True)

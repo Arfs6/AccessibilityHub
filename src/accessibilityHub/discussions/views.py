@@ -6,7 +6,6 @@ from django_htmx.http import HttpResponseClientRedirect
 
 from .forms import TopicForm, CommentForm
 from .models import Topic, Comment
-from utils import base362Decimal
 
 
 @require_http_methods(["GET"])
@@ -57,7 +56,7 @@ def topicPage(request: HttpRequest, base36Id: str) -> HttpResponse:
     - base36Id: base 36 id of the topic.
     """
     form = CommentForm()
-    topic = get_object_or_404(Topic, pk=base362Decimal(base36Id))
+    topic = get_object_or_404(Topic, pk=int(base36Id, 36))
     if request.method == "POST":
         _form = CommentForm(request.POST)
         if _form.is_valid():
