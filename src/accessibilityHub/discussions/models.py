@@ -26,7 +26,7 @@ class Topic(models.Model):
 
     @property
     def base36Id(self):
-        """A base 32 representation of the id."""
+        """A base 36 representation of the id."""
         return decimal2Base36(self.pk)
 
 
