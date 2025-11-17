@@ -9,12 +9,6 @@ from django.contrib.auth import login, logout
 from .forms import CoreUserCreationForm
 
 
-def home(request):
-    """Renders the home page for Accessibility Hub."""
-    context = {}
-    return render(request, "core/home.html", context)
-
-
 class CoreLoginView(authViews.LoginView):
     """Extends auth login view."""
 

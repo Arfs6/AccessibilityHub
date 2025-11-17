@@ -10,7 +10,7 @@ app_name = "core"
 urlpatterns = [
     path(
         "",
-        views.home,
+        TemplateView.as_view(template_name="core/home.html"),
         name="home",
     ),
     path(

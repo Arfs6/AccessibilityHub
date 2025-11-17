@@ -11,7 +11,7 @@ from core import views
 
 
 class TestURLPatterns(SimpleTestCase):
-    """Test all the urls in core.url"""
+    """Test all the url patterns in core.url"""
 
     def test_appName(self):
         """Core should Have a namespace."""
@@ -32,7 +32,7 @@ class TestURLPatterns(SimpleTestCase):
 
         self.assertIsNotNone(home)
         self.assertEqual(str(home.pattern), '')
-        self.assertEqual(home.callback, views.home)
+        self.assertIs(home.callback.view_class, TemplateView)
 
     def test_urlpattern_login(self):
         """Verify the data in the login pattern."""
