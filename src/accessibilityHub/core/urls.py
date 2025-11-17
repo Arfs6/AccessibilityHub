@@ -25,8 +25,8 @@ urlpatterns = [
     ),
     path(
         "accounts/signup",
-        views.createAccount,
-        name="createAccount",
+        views.coreSignupView,
+        name="signup",
     ),
     path(
         "about",

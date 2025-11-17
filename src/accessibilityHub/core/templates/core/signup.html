@@ -1,21 +1,21 @@
 {% extends baseTemplate %}
 
 {% block title %}
-<title>Create Account | Accessibility Hub</title>
+<title>Signup | Accessibility Hub</title>
 {% endblock %}
 
 {% block content %}
 <section>
 	<H1>Join us</h1>
 	<p>You are one step away from being a part of us. It's easy, just fill the form below.</p>
-	<form action="{% url 'core:createAccount' %}" method="POST">
+	<form action="{% url 'core:signup' %}" method="POST">
 		{% csrf_token %}
 		{{ form }}
 		{% if next %}
 <input type="hidden" name="next" value="{{ next }}">
 {% endif %}
 
-		<input type="submit" value="Create Account">
+		<input type="submit" value="Signup">
 		</form>
 	</section>
 {% endblock %}

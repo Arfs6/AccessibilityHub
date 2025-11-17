@@ -8,6 +8,6 @@
 <li><a href="{% url 'core:logout' %}?next={{ request.path }}"><span class="fas fa-sign-out-alt"></span>Logout</a></li>
 {% else %}
 <li><a href="{% url 'core:login' %}?next={{ request.path }}"><span class="fas fa-sign-in-alt"></span>Login</a></li>
-<li><a href="{% url 'core:createAccount' %}?next={{ request.path }}"><span class="fas fa-user-plus"></span>Create
+<li><a href="{% url 'core:signup' %}?next={{ request.path }}"><span class="fas fa-user-plus"></span>Create
 		Account</a></li>
 {% endif %}

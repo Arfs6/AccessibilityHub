@@ -21,7 +21,7 @@ class CoreLoginView(authViews.LoginView):
     template_name = "core/login.html"
 
 
-def createAccount(request: HttpRequest) -> HttpResponse:
+def coreSignupView(request: HttpRequest) -> HttpResponse:
     """View for creating accounts."""
     if request.method == "POST":
         _form = CoreUserCreationForm(request.POST)
@@ -42,7 +42,7 @@ def createAccount(request: HttpRequest) -> HttpResponse:
         "form": _form,
         "next": next,
     }
-    return render(request, "core/create_account.html", context)
+    return render(request, "core/signup.html", context)
 
 
 def coreLogoutView(request):
