@@ -46,7 +46,7 @@ def coreLogoutView(request):
         response = HttpResponse(status=204)
         next = request.GET.get("next")
         if not next:
-            next = settings.LOGGIN_REDIRECT_URL
+            next = settings.LOGOUT_REDIRECT_URL
         response["HX-Redirect"] = next
         return response
     else:
