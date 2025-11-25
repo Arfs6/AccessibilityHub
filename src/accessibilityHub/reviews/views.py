@@ -85,15 +85,6 @@ def newTool(request: HttpRequest) -> HttpResponse:
     return render(request, "reviews/new_tool.html", context)
 
 
-def userReview(request: HttpRequest, ownerBase36Id: str, toolSlug: str, userId: int):
-    """A user's review.
-    Parameters:
-    - ownerBase36Id: The base 36 id of an owner
-    - toolSlug: The slug of a tool owned by @owner.
-    - userId: Id of a user.
-    """
-
-
 @require_http_methods(["GET"])
 def search(request: HttpRequest) -> HttpResponse:
     """Search view.

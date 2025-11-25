@@ -61,17 +61,6 @@ class TestURLPatterns(SimpleTestCase):
         self.assertEqual(str(newTool.name), "newTool")
         self.assertEqual(newTool.callback, views.newTool)
 
-    def test_userReview(self):
-        """Test for the userReview url pattern."""
-        userReview = None
-        for urlPattern in urls.urlpatterns:
-            if urlPattern.name == "userReview":
-                userReview = urlPattern
-
-        self.assertIsNotNone(userReview)
-        self.assertEqual(str(userReview.pattern), "owners/<str:ownerBase36Id>/<str:toolSlug>/<int:userId>")
-        self.assertEqual(userReview.callback, views.userReview)
-
     def test_search(self):
         """Test for the search url pattern."""
         search = None
