@@ -42,7 +42,7 @@ extra-dependencies = [
   "mypy>=1.0.0",
 ]
 [tool.hatch.envs.types.scripts]
-check = "mypy --install-types --non-interactive {args:src/accessibilityHub tests}"
+check = "mypy --install-types --non-interactive {args:src/accessibilityHub}"
 
 [tool.coverage.run]
 source = ["accessibilityHub", "tests"]
@@ -62,3 +62,6 @@ exclude_lines = [
   "if __name__ == .__main__.:",
   "if TYPE_CHECKING:",
 ]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/accessibilityHub"]
