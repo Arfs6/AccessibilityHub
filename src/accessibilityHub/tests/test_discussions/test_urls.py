@@ -1,7 +1,7 @@
 """Tests for url in the discussions app."""
 
+from discussions import urls, views
 from django.test import SimpleTestCase
-from discussions import urls
 
 
 class TestURLPatterns(SimpleTestCase):
@@ -56,7 +56,7 @@ class TestURLPatterns(SimpleTestCase):
             if urlPattern.name == "topicPage":
                 topicPage = urlPattern
         self.assertIsNotNone(topicPage)
-        self.assertEqual(str(topicPage.name), "topics/<str:base36Id>")
+        self.assertEqual(str(topicPage.pattern), "topics/<str:base36Id>")
         self.assertEqual(topicPage.callback, views.topicPage)
 
     def test_search(self):
