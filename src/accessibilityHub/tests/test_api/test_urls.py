@@ -4,7 +4,10 @@ and using `django.test.client` on all urls.
 """
 
 from api import urls, views
-from django.test import SimpleTestCase
+from django.contrib.auth.models import User
+from django.test import Client, SimpleTestCase, TestCase
+from django.urls import reverse
+from reviews import forms
 
 
 class TestURLPatterns(SimpleTestCase):
@@ -51,3 +54,60 @@ class TestURLPatterns(SimpleTestCase):
         self.assertIsNotNone(newTool)
         self.assertEqual(str(newTool.pattern), "tools")
         self.assertIs(newTool.callback, views.newTool)
+
+
+class TestUrls(TestCase):
+    """A higher level test for api urls."""
+
+    fixtures = ["User.json", "Tool.json", "Review.json", "Owner.json"]
+
+    def setup(self):
+        """Setup for all tests."""
+        self.client = Client(ensure_csrf_check=True)
+        self.user = User.objects.all().first()
+        self.client.force_login(self.user)
+
+    def test_newOwner(self):
+        """Test for new owner url."""
+        newOwnerUrl = "api:newOwner"
+        response = self.client.post(
+            reverse(newOwnerUrl),
+            data={
+                "name": "New Owner",
+                "url": "https://owner.new",
+                "description": "New owner description.",
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "api/new_tool_form.html")
+        self.assertIsInstance(response.context["form"], forms.ToolForm)
+
+        # Test for failed test.
+        response = self.client.post(reverse(newOwnerUrl))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "api/new_owner_form.html")
+        self.assertIsInstance(response.context["form"], forms.OwnerForm)
+        self.assertTrue(response.context["form"].errors)
+
+    def test_newTool(self):
+        """Test for the new tool url."""
+        newToolUrl = "api:newTool"
+        response = self.client.post(
+            reverse(newToolUrl),
+            data={
+                "name": "New Tool",
+                "url": "https://tool.new",
+                "description": "New tool description",
+                "ownerName": "New Owner",
+                "ownerUrl": "https://owner.new",
+                "ownerDescription": "New owner description",
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "api/new_tool_success.html")
+
+        # Test for invalid data.
+        response = self.client.post(reverse(newToolUrl))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "api/new_tool_form.html")
+        self.assertIsInstance(response.context["form"], forms.ToolForm)
