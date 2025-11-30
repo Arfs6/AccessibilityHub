@@ -1,62 +1,79 @@
 ## Accessibility Hub
 
-A community focused on accessibility. It provides space for discussion and reviews on accessibility.
+## A community focused on accessibility
 
-> Accessibility isn't only screen reader and blindness. To me, accessibility has to do with providing the things some people need to use your tool. People that require that feature are people that depends on the accessibility of the tool.
+This project creates a platform for discussions on topics related to the accessibility of digital and physical tools, including a section where users can review tools by submitting a rating and a comment.
 
-This repo has the first alpha version of the website. All subsequent versions are under different licences.
+Live demo at: <https://arfs6.pythonanywhere.com>
 
-The website is not live yet.
+> Accessibility isn't just about screen readers and blindness. To me, a tool is accessible when I can work with the tool independently. On the other hand, a tool isn't accessible when it requires extra steps, extra tools or extra resources for me to be able to use it.
 
-## Try it!
+## Content of This Repository
 
-You need python to be able to test this web app.
+This repository has a basic implementation of the AccessibilityHub website. This include the django project, the frontend assets (html, css and js) and the installation scripts.
 
-To run this locally, do this:
+## Running The Project Locally
 
-1. **Clone the repo**; `git clone https://github.com/arfs6/AccessibilityHub`
-2. **Switch to the directory / folder**; `cd AccessibilityHub`
-3. **Get the pip dependencies**; `pip install -r requirements.txt`
-4. **Switch to the django project**; `cd src/accessibilityHub`
-5. **Start the local server**; `python manage.py runserver`
+You need [hatch]{#hatch} to be able to run the website locally. Make sure you have it [installed](https://hatch.pypa.io/latest/install/) on your machine.
 
-**BOOM!** Now, you can open your browser and type localhost:5000 in the address bar to open the website.
+### Starting The Server
 
-## Disassemble
+1. **Clone this repo**: `git clone https://github.com/arfs6/AccessibilityHub`
+2. **Switch to the repo directory**: `cd AccessibilityHub`
+3. **Start the development server**: `hatch run src/accessibilityHub/manage.py runserver`
 
-Accessibility hub is made up of
+Wait for hatch to finish setting up the project. Then you can open your browser and type `localhost:8000` in the address bar to open the website.
 
-- [Django](django)
+### Running Tests and Ruff
+
+1. **Test**: `hatch run src/accessibilityHub/manage.py test tests`
+2. **Ruff (linting and formatting)**: `hatch fmt`
+
+`mypy` is supposed to be the static type checker, but I haven't tried it yet.
+
+## Project Disassembling
+
+Here are the key components of Accessibility Hub:
+
+- [Django](#django)
 - [Gunicorn](#gunicorn)
 - [Nginx](#nginx)
-- [MySQL](#mysql)
+- [MySQL and SQLite](#mysql-and-sqlite)
 - [HTMX](#htmx)
 - [Fabric](#fabric)
+- [Hatch](#hatch)
 
 ### Django {#django}
 
-Accessibility hub was built using the django frame work. I think one of the biggest reason why I chose django over flask is the batteries included stuffs. It has three django apps;
+Accessibility hub is built with the [django](https://www.djangoproject.com) framework. I chose django for its "batteries included" nature, it comes with most of the things I need to build a backend.
 
-- `core`: This apps has the core part of the website. This could be parts that fit everywhere (like templates) or parts that fits nowhere (like home page).
-- `review`; This app has code related to the review feature of accessibility hub.
-- `api`; As the name suggests, the api app has api related code. Although, I am thinking of removing this app because I am using [HTMX](#htmx).
+There are four (4) apps in the django project:
 
-So far, no external django app / middle-ware has been used.
+- `core`: Shared logic, templates and general pages.
+- `discussions`: Handle all discussions related features.
+- `review`: Handles all reviews related features.
+- `api`: Has mini views and templates. This may be removed in the future.
+
+The [`django-htmx`](https://django-htmx.readthedocs.io/en/latest/) middleware was added to streamline htmx usage.
 
 ### Gunicorn {#gunicorn}
 
-I used [gunicorn]() as the wsgi server that nginx proxies to. Gunicorn has it's own systemd script, so it's possible to start / stop / restart the app using systemctl.
+[Gunicorn](https://gunicorn.org/) serves as the wsgi server that [nginx](#nginx) proxies to. There is a dedicated systemd unit for managing gunicorn.
 
 ### Nginx {#nginx}
 
-Nginx is the web server that serves the static files of the website and proxies all other requests to gunicorn.
+[Nginx](https://nginx.org) serves as the web server for serveing static files of the website, and it sends all other requests to [gunicorn]{#gunicorn}. It also has a systemd unit.
 
-### MySQL {#mysql}
+There is a [haproxy](https://www.haproxy.org) configuration too. It was tested at an early stage of the project development.
 
-I chose MySQL over postgresql because I know MySQL. I thought of using postgresql but as this is a portfolio project with a deadline, I decided sticking with what I know here is better. Django manages the sql migrations and most things.
+### MySQL {#mysql-and-sqlite}
+
+[MySQL](https://www.mysql.com) and [SQLite](https://sqlite.org) are the databases that are supported. SQLite is used for the demo app and in development for now. MySQL was the original database, but it was swapped for SQLite for its simplicity. 
 
 ### Fabric {#fabric}
 
-Automation!!! I used fabric to automate some stuffs. Like creating and setting up new servers. The fabric script most probably needs some updates because somethings has changed in the project.
+There are [fabric](https://www.fabfile.org) scripts for automatically setting up the web server in a virtual machine. This could be out of date as the server is now hosted in [`pythonanywhere`](https://www.pythonanywhere.com)
 
-Now, this is the disassembling of accessibility hub.
+### Hatch {#hatch}
+
+[`Hatch`](https://hatch.pypa.io) is the tool that manages the project's python virtual environments and dependencies. All configurations can be found in the [`pyproject.toml`](./pyproject.toml)
