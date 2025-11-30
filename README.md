@@ -6,15 +6,15 @@ This project creates a platform for discussions on topics related to the accessi
 
 Live demo at: <https://arfs6.pythonanywhere.com>
 
-> Accessibility isn't just about screen readers and blindness. To me, a tool is accessible when I can work with the tool independently. On the other hand, a tool isn't accessible when it requires extra steps, extra tools or extra resources for me to be able to use it.
+> Accessibility is not just about screen readers and blindness. To me, a tool is accessible when I can work with the tool independently. On the other hand, a tool isn't accessible when it requires extra steps, extra tools or extra resources for me to be able to use it.
 
 ## Content of This Repository
 
-This repository has a basic implementation of the AccessibilityHub website. This include the django project, the frontend assets (html, css and js) and the installation scripts.
+This repository has a basic implementation of the AccessibilityHub website. This include the [django](#django) project, the frontend assets (html, css and js) and the installation scripts.
 
 ## Running The Project Locally
 
-You need [hatch]{#hatch} to be able to run the website locally. Make sure you have it [installed](https://hatch.pypa.io/latest/install/) on your machine.
+You need [hatch](#hatch) to be able to run the website locally. Make sure you have it [installed](https://hatch.pypa.io/latest/install/) on your machine.
 
 ### Starting The Server
 
