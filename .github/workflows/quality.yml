@@ -1,0 +1,20 @@
+Name: Quality - Format, Lint and Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install Hatch
+        uses: pypa/hatch@install
+      - name: run tests
+        run: hatch run src/accessibilityHub/manage.py test tests
+      - name: run ruff with hatch
+        run: hatch fmt --check
