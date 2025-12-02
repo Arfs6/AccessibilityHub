@@ -31,6 +31,12 @@ dependencies = [
 "unicorn",
 ]
 
+[project.optional-dependencies]
+	dev = ["ruff"]
+
+	[tool.hatch.envs.default]
+	features = ["dev"]
+
 [project.urls]
 Source = "https://github.com/arfs6/AccessibilityHub"
 
@@ -65,3 +71,11 @@ exclude_lines = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/accessibilityHub"]
+
+[tool.ruff]
+ignore = [
+	"N999", # Ignore camel case for package and models names
+	"N816", # Ignore camel case for global variable
+]
+[tool.ruff.format]
+quote-style = "single"
