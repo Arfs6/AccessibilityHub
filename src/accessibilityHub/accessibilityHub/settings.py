@@ -12,16 +12,17 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from os import getenv
 from pathlib import Path
 
+from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
-
 gitRootDir = Path(__file__).resolve().parents[3]
-dotEnvPath = gitRootDir / ".env"
+dotEnvPath = gitRootDir / '.env'
 
 load_dotenv(dotEnvPath)
 SECRET_KEY = getenv('DJANGO_SECRET_KEY')
 if not SECRET_KEY:
-    raise Exception("Could not load `SECRET_KEY`. Make sure `.env` has `DJANGO_SECRET_KEY` defined.")
+    msg = 'Could not load `SECRET_KEY`. Make sure `.env` has `DJANGO_SECRET_KEY` defined.'
+    raise ImproperlyConfigured(msg)
 
 # hatch environment names.
 PRODUCTION = 'production'
