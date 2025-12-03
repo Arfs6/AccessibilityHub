@@ -20,7 +20,8 @@ You need [hatch](#hatch) to be able to run the website locally. Make sure you ha
 
 1. **Clone this repo**: `git clone https://github.com/arfs6/AccessibilityHub`
 2. **Switch to the repo directory**: `cd AccessibilityHub`
-3. **Start the development server**: `hatch run src/accessibilityHub/manage.py runserver`
+3. **Create secret key for .env**: `hatch run random-secret-key >> .env`
+4. **Start the development server**: `hatch run src/accessibilityHub/manage.py runserver`
 
 Wait for hatch to finish setting up the project. Then you can open your browser and type `localhost:8000` in the address bar to open the website.
 

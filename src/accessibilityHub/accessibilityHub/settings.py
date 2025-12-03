@@ -12,7 +12,22 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from os import getenv
 from pathlib import Path
 
-devEnv = bool(getenv('ACCESSIBILITY_HUB_ENV'))
+from dotenv import load_dotenv
+
+
+gitRootDir = Path(__file__).resolve().parents[3]
+dotEnvPath = gitRootDir / ".env"
+
+load_dotenv(dotEnvPath)
+SECRET_KEY = getenv('DJANGO_SECRET_KEY')
+if not SECRET_KEY:
+    raise Exception("Could not load `SECRET_KEY`. Make sure `.env` has `DJANGO_SECRET_KEY` defined.")
+
+# hatch environment names.
+PRODUCTION = 'production'
+DEFAULT = 'default'
+
+hatchEnv = bool(getenv('HATCH_ENV_ACTIVE'))
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,15 +35,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-$s(*3x4qh=l*j3rtcn(0qcb@aez+@i50%tx=&2_o6dr!36u*0l'
-
 # SECURITY WARNING: don't run with debug turned on in production!
-if devEnv:
+if hatchEnv == DEFAULT:
     DEBUG = True
 
 ALLOWED_HOSTS = ['arfs6.pythonanywhere.com', 'localhost']
-if devEnv:
+if hatchEnv == DEFAULT:
     ALLOWED_HOSTS.append('infinite-generous-kite.ngrok-free.app')
 
 

@@ -27,15 +27,28 @@ classifiers = [
 dependencies = [
 "django",
 "django-htmx",
-"fabric",
-"unicorn",
+"python-dotenv",
 ]
 
 [project.optional-dependencies]
-	dev = ["ruff"]
+dev = [
+	"ruff",
+"fabric",
+]
+production = [
+	"unicorn",
+]
 
 	[tool.hatch.envs.default]
 	features = ["dev"]
+
+	[tool.hatch.envs.default.scripts]
+	random-secret-key = """
+python -<<'EOF'
+from django.core.management.utils import get_random_secret_key
+print('DJANGO_SECRET_KEY="', get_random_secret_key(), '"', sep='')
+EOF
+"""
 
 [project.urls]
 Source = "https://github.com/arfs6/AccessibilityHub"
