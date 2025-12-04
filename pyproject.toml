@@ -89,6 +89,9 @@ packages = ["src/accessibilityHub"]
 ignore = [
 	"N999", # Ignore camel case for package and models names
 	"N816", # Ignore camel case for global variable
+	"N802", # Ignore camel case for function name
+	"N803", # Ignore camel case for argument name
+	"N806", # Ignore camel case for variables
 ]
 [tool.ruff.format]
 quote-style = "single"

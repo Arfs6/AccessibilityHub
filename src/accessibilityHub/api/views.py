@@ -1,9 +1,9 @@
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed
 from django.contrib.auth.models import User
+from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed
+from django.shortcuts import get_object_or_404, render
 
-from reviews.forms import ReviewForm, OwnerForm, ToolForm
-from reviews.models import Review, Tool, Owner
+from reviews.forms import OwnerForm, ReviewForm, ToolForm
+from reviews.models import Owner, Review, Tool
 
 
 def createReview(request: HttpRequest, toolId: int) -> HttpResponse:
@@ -35,7 +35,7 @@ def createReview(request: HttpRequest, toolId: int) -> HttpResponse:
 
 def newOwner(request: HttpRequest) -> HttpResponse:
     """Verifies form for creation of owner and returns a form for creating tool."""
-    if request.method != "POST":
+    if request.method != 'POST':
         return HttpResponseNotAllowed(['POST'])
 
     form = OwnerForm(request.POST)
@@ -47,16 +47,16 @@ def newOwner(request: HttpRequest) -> HttpResponse:
             'ownerUrl': data['url'],
         }
         newForm = ToolForm(initial=initial)
-        context = dict(form=newForm)
+        context = {'form': newForm}
         return render(request, 'api/new_tool_form.html', context)
 
-    context = dict(form=form)
+    context = {'form': form}
     return render(request, 'api/new_owner_form.html', context=context)
 
 
 def newTool(request: HttpRequest) -> HttpResponse:
     """Creation of tools."""
-    if request.method != "POST":
+    if request.method != 'POST':
         return HttpResponseNotAllowed(['POST'])
 
     form = ToolForm(request.POST)
@@ -75,5 +75,5 @@ def newTool(request: HttpRequest) -> HttpResponse:
         tool.save()
         return render(request, 'api/new_tool_success.html')
 
-    context = dict(form=form)
+    context = {'form': form}
     return render(request, 'api/new_tool_form.html', context=context)
