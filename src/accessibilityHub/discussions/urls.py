@@ -1,34 +1,34 @@
-# -*- coding: utf-8 -*-
 """Url config for discussions app."""
+
 from django.urls import path
 
 from . import views
 
-app_name = "discussions"
+app_name = 'discussions'
 urlpatterns = [
     path(
-        "",
+        '',
         views.landing,
-        name="landing",
+        name='landing',
     ),
     path(
-        "topics",
+        'topics',
         views.index,
-        name="index",
+        name='index',
     ),
     path(
-        "topics/new",
+        'topics/new',
         views.newTopic,
-        name="newTopic",
+        name='newTopic',
     ),
     path(
-        "topics/<str:base36Id>",
+        'topics/<str:base36Id>',
         views.topicPage,
-        name="topicPage",
+        name='topicPage',
     ),
     path(
-        "search",
+        'search',
         views.search,
-        name="search",
+        name='search',
     ),
 ]

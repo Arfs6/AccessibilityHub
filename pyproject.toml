@@ -86,12 +86,17 @@ exclude_lines = [
 packages = ["src/accessibilityHub"]
 
 [tool.ruff]
+exclude = [
+"migrations", # Automatically generated code by django-admin
+]
 ignore = [
 	"N999", # Ignore camel case for package and models names
 	"N816", # Ignore camel case for global variable
 	"N802", # Ignore camel case for function name
 	"N803", # Ignore camel case for argument name
 	"N806", # Ignore camel case for variables
+	"N815", # Ignore camel case for class variables
+	"TID252", # Allow relative imports
 ]
 [tool.ruff.format]
 quote-style = "single"

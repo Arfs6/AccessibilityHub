@@ -1,6 +1,8 @@
+import typing
+
 from django import forms
 
-from .models import Topic, Comment
+from .models import Comment, Topic
 
 
 class TopicForm(forms.ModelForm):
@@ -8,11 +10,12 @@ class TopicForm(forms.ModelForm):
 
     class Meta:
         model = Topic
-        fields = ["name", "description"]
+        fields: typing.ClassVar = ['name', 'description']
 
 
 class CommentForm(forms.ModelForm):
     """A form for topic comments."""
+
     class Meta:
         model = Comment
-        fields = ["content"]
+        fields: typing.ClassVar = ['content']
