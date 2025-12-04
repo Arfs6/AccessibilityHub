@@ -2,7 +2,7 @@
 
 from django.urls import path
 
-from . import views  # noqa: TID252
+from . import views
 
 app_name = 'api'
 urlpatterns = [
