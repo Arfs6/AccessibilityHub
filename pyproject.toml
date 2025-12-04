@@ -7,7 +7,7 @@ name = "accessibilityHub"
 dynamic = ["version"]
 description = '\x1b[1;5F\x1b[1;5F\x1b[1;5F\x1b[1;5F\x1b[1;5F\x1b[4~A community focused on accessibility'
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.11"
 license = "MIT"
 keywords = []
 authors = [
