@@ -1,10 +1,8 @@
-from http.client import HTTPResponse
-from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
-from django.contrib.auth import views as authViews
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
+from django.contrib.auth import views as authViews  # noqa: N812
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
 
 from .forms import CoreUserCreationForm
 
@@ -12,44 +10,42 @@ from .forms import CoreUserCreationForm
 class CoreLoginView(authViews.LoginView):
     """Extends auth login view."""
 
-    template_name = "core/login.html"
+    template_name = 'core/login.html'
 
 
 def coreSignupView(request: HttpRequest) -> HttpResponse:
     """View for creating accounts."""
-    if request.method == "POST":
+    if request.method == 'POST':
         _form = CoreUserCreationForm(request.POST)
         if _form.is_valid():
             newUser = _form.save()
             login(request, newUser)
-            next = request.POST.get("next")
-            if next is None:
-                next = settings.LOGIN_REDIRECT_URL
-            return HttpResponseRedirect(next)
-        else:
-            next = request.POST.get("next")
+            nextUrl = request.POST.get('next')
+            if nextUrl is None:
+                nextUrl = settings.LOGIN_REDIRECT_URL
+            return HttpResponseRedirect(nextUrl)
+
+        nextUrl = request.POST.get('next')
     else:
         _form = CoreUserCreationForm()
-        next = request.GET.get("next")
+        nextUrl = request.GET.get('next')
 
     context = {
-        "form": _form,
-        "next": next,
+        'form': _form,
+        'next': nextUrl,
     }
-    return render(request, "core/signup.html", context)
+    return render(request, 'core/signup.html', context)
 
 
 def coreLogoutView(request):
     """Logs the user out."""
-    if request.method == "DELETE":
+    if request.method == 'DELETE':
         logout(request)
         response = HttpResponse(status=204)
-        next = request.GET.get("next")
-        if not next:
-            next = settings.LOGOUT_REDIRECT_URL
-        response["HX-Redirect"] = next
+        nextUrl = request.GET.get('next')
+        if not nextUrl:
+            nextUrl = settings.LOGOUT_REDIRECT_URL
+        response['HX-Redirect'] = nextUrl
         return response
-    else:
-        return render(
-            request, "core/logout.html", context={"next": request.GET.get("next")}
-        )
+
+    return render(request, 'core/logout.html', context={'next': request.GET.get('next')})
