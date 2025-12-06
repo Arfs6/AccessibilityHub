@@ -1,10 +1,9 @@
-from urllib.parse import unquote
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpRequest, HttpResponse, Http404, QueryDict
+from django.http import Http404, HttpRequest, HttpResponse, HttpResponseBadRequest, QueryDict
+from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_http_methods
 
-from .forms import ReviewForm, OwnerForm
-from .models import Tool, Owner, Review
+from .forms import OwnerForm, ReviewForm
+from .models import Owner, Review, Tool
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -13,9 +12,9 @@ def index(request: HttpRequest) -> HttpResponse:
     """
     tools = Tool.allVerified().all()
     context = {
-        "tools": tools,
+        'tools': tools,
     }
-    return render(request, "reviews/index.html", context)
+    return render(request, 'reviews/index.html', context)
 
 
 def owner(request: HttpRequest, base36Id: str) -> HttpResponse:
@@ -26,13 +25,14 @@ def owner(request: HttpRequest, base36Id: str) -> HttpResponse:
     """
     try:
         owner = Owner.allVerified().get(pk=int(base36Id, 36))
-    except Owner.DoesNotExist:
-        raise Http404(f"Owner with id <{base36Id}> not found.")
+    except Owner.DoesNotExist as error:
+        errorMsg = f'Owner with id <{base36Id}> not found.'
+        raise Http404(errorMsg) from error
     context = {
-        "owner": owner,
-        "tools": owner.tools.filter(verified=True).all(),
+        'owner': owner,
+        'tools': owner.tools.filter(verified=True).all(),
     }
-    return render(request, "reviews/owner.html", context)
+    return render(request, 'reviews/owner.html', context)
 
 
 @require_http_methods(['GET', 'POST', 'PUT'])
@@ -44,16 +44,17 @@ def tool(request: HttpRequest, ownerBase36Id: str, toolSlug: str) -> HttpRespons
     """
     try:
         owner = Owner.allVerified().get(pk=int(ownerBase36Id, 36))
-    except Owner.DoesNotExist:
-        raise Http404(f"Owner with id <{ownerBase36Id}> could not be found.")
+    except Owner.DoesNotExist as error:
+        errorMsg = f'Owner with id <{ownerBase36Id}> could not be found.'
+        raise Http404(errorMsg) from error
     tool = get_object_or_404(owner.tools, slug=toolSlug, verified=True)
     userReview = Review.objects.filter(tool=tool, user=request.user).first() if request.user.is_authenticated else None
-    if request.method == "GET":
+    if request.method == 'GET':
         form = None
         if request.user.is_authenticated:
             # display form for editing / creating reviews.
             form = ReviewForm(instance=userReview) if userReview else ReviewForm()
-    elif request.method == "POST":
+    elif request.method == 'POST':
         form = ReviewForm(request.POST)
         if form.is_valid():
             form.instance.tool = tool
@@ -61,37 +62,45 @@ def tool(request: HttpRequest, ownerBase36Id: str, toolSlug: str) -> HttpRespons
             form.save()
     else:  # Put method
         if userReview is None:
-            raise Http404("Cannot find review to update.")
+            errorMsg = 'Cannot find review to update.'
+            raise Http404(errorMsg)
         data = QueryDict(request.body)
         form = ReviewForm(data, instance=userReview)
         if form.is_valid():
             form.save()
-    return render(request, "reviews/tool.html", context={
-        "owner": owner,
-        "tool": tool,
-        "reviews": tool.reviews.exclude(comment='').all(),
-        "form": form,
-        "formInstanceState": form.instance._state if form is not None else None,
-    })
+    return render(
+        request,
+        'reviews/tool.html',
+        context={
+            'owner': owner,
+            'tool': tool,
+            'reviews': tool.reviews.exclude(comment='').all(),
+            'form': form,
+            'userReview': userReview,
+        },
+    )
 
 
 def newTool(request: HttpRequest) -> HttpResponse:
     """This view allows a user to request for creation of new tools to be reviewd."""
     form = OwnerForm()
     context = {
-        "title": "Request New Tool",
-        "form": form,
+        'title': 'Request New Tool',
+        'form': form,
     }
-    return render(request, "reviews/new_tool.html", context)
+    return render(request, 'reviews/new_tool.html', context)
 
 
-@require_http_methods(["GET"])
+@require_http_methods(['GET'])
 def search(request: HttpRequest) -> HttpResponse:
-    """Search view.
-    """
+    """Search view."""
     if request.GET.get('searchTerm') is None:
-        return HttpResponse("Search term not provided.".encode(), status=400)
+        return HttpResponseBadRequest(b'Search term not provided.')
     tools = Tool.objects.filter(name__icontains=request.GET['searchTerm']).all()
-    return render(request, "reviews/search.html", {
-        "tools": tools,
-    })
+    return render(
+        request,
+        'reviews/search.html',
+        {
+            'tools': tools,
+        },
+    )

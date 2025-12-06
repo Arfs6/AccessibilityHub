@@ -1,9 +1,6 @@
-from django.db import models
 from django.contrib.auth.models import User
-from django.core.validators import MaxValueValidator
-from django.utils import timezone
+from django.db import models
 from django.utils.text import slugify
-from typing import Optional
 
 from utils import decimal2Base36
 
@@ -14,7 +11,7 @@ class Owner(models.Model):
     name = models.CharField(max_length=128)
     url = models.URLField()
     description = models.TextField(null=True, blank=True)
-    slug = models.SlugField(max_length=128, default="")
+    slug = models.SlugField(max_length=128, default='')
     verified = models.BooleanField(default=False)
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now_add=True)
@@ -23,7 +20,7 @@ class Owner(models.Model):
         """Returns a string representation of the object.
         Mainly for admin site.
         """
-        return f"Owner: {self.name}"
+        return f'Owner: {self.name}'
 
     @classmethod
     def allVerified(cls):
@@ -49,8 +46,8 @@ class Tool(models.Model):
     name = models.CharField(max_length=128)
     url = models.URLField()
     description = models.TextField(null=True, blank=True)
-    owner = models.ForeignKey(Owner, on_delete=models.CASCADE, related_name="tools")
-    slug = models.SlugField(max_length=128, default="")
+    owner = models.ForeignKey(Owner, on_delete=models.CASCADE, related_name='tools')
+    slug = models.SlugField(max_length=128, default='')
     verified = models.BooleanField(default=False)
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now_add=True)
@@ -68,7 +65,7 @@ class Tool(models.Model):
         return super().save(*args, **kwargs)
 
     @property
-    def avgRating(self) -> Optional[float]:
+    def avgRating(self) -> float | None:
         """Returns the average rating of a tool.
         Returns None if there aren't any rating.
         """
@@ -81,18 +78,18 @@ class Tool(models.Model):
 
 
 class Review(models.Model):
-    """Represents a review of a tool.
-    """
-    ratingChoices = [
-        (1, "Non-Accessible"),
-        (2, "Partially Accessible"),
-        (3, "Mostly Accessible"),
-        (4, "Highly Accessible"),
-        (5, "Fully Accessible")
-    ]
+    """Represents a review of a tool."""
+
+    ratingChoices = (
+        (1, 'Non-Accessible'),
+        (2, 'Partially Accessible'),
+        (3, 'Mostly Accessible'),
+        (4, 'Highly Accessible'),
+        (5, 'Fully Accessible'),
+    )
     rating = models.PositiveSmallIntegerField(choices=ratingChoices)
     comment = models.TextField(null=False, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reviews")
-    tool = models.ForeignKey(Tool, on_delete=models.CASCADE, related_name="reviews")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
+    tool = models.ForeignKey(Tool, on_delete=models.CASCADE, related_name='reviews')
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now_add=True)

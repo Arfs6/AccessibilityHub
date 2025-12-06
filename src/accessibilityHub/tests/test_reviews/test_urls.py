@@ -138,7 +138,7 @@ class TestURLS(TestCase):
             tool.reviews.exclude(comment="").order_by("pk"),
         )
         self.assertIsNone(response.context["form"])  # user is anonymous
-        self.assertIsNone(response.context["formInstanceState"])
+        self.assertIsNone(response.context["userReview"])
 
         # Test for verified=False
         tool = models.Tool.objects.filter(verified=False).first()
