@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
 """This module contains utility functions"""
-
 
 BASE36VALUES = '0123456789abcdefghijklmnopqrstuvwxyz'
 
