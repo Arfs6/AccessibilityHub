@@ -1,20 +1,10 @@
 {
 	"servers": [
 		{
-			"host": "34.234.201.94",
-			"user": "ubuntu",
-			"type": "wb"
-		},
-			{
-			"host": "54.84.207.225",
-			"user": "ubuntu",
-			"type": "wb"
-		},
-		{
-			"host": "18.234.130.97",
-			"user": "ubuntu",
-			"type": "lb"
+			"host": "{{ host_ip_address_or_domain }}",
+			"user": "{{ system_username }}",
+			"type": "{{ wb_or_ld }}"
 		}
 	],
-	"private_key": "/home/abuahmad/.ssh/alx_keygen"
+	"private_key": "{{ absolute_path_to_valid_ssh_key }}"
 }
