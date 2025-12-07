@@ -5,7 +5,6 @@ import typing
 from django.contrib.auth.models import User
 from django.test import Client, SimpleTestCase, TestCase
 from django.urls import reverse
-
 from reviews import forms, models, urls, views
 
 

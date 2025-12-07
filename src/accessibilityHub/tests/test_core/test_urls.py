@@ -5,12 +5,11 @@ and using `django.test.client` on all urls.
 
 import typing
 
+from core import urls, views
 from django.conf import settings
 from django.test import SimpleTestCase, TestCase, client
 from django.urls import reverse
 from django.views.generic import TemplateView
-
-from core import urls, views
 
 
 class TestURLPatterns(SimpleTestCase):

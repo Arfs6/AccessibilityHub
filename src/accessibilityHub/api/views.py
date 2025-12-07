@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404, render
-
 from reviews.forms import OwnerForm, ReviewForm, ToolForm
 from reviews.models import Owner, Review, Tool
 

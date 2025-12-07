@@ -5,11 +5,10 @@ and using `django.test.client` on all urls.
 
 import typing
 
+from api import urls, views
 from django.contrib.auth.models import User
 from django.test import Client, SimpleTestCase, TestCase
 from django.urls import reverse
-
-from api import urls, views
 from reviews import forms
 
 

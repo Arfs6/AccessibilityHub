@@ -2,11 +2,10 @@
 
 import typing
 
+from discussions import models, urls, views
 from django.contrib.auth.models import User
 from django.test import Client, SimpleTestCase, TestCase
 from django.urls import reverse
-
-from discussions import models, urls, views
 
 
 class TestURLPatterns(SimpleTestCase):
