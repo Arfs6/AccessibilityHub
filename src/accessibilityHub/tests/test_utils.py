@@ -14,7 +14,7 @@ class TestUtils(unittest.TestCase):
         decimals = range(36)
         base36 = [str(num) for num in range(10)]
         base36.extend(list('abcdefghijklmnopqrstuvwxyz'))
-        for num_dec, num_36 in zip(decimals, base36):
+        for num_dec, num_36 in zip(decimals, base36, strict=True):
             self.assertEqual(utils.decimal2Base36(num_dec), num_36)
 
     def test_decimal2Base36_edges(self):
