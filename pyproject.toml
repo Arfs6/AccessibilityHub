@@ -97,6 +97,7 @@ ignore = [
 	"N806", # Ignore camel case for variables
 	"N815", # Ignore camel case for class variables
 	"TID252", # Allow relative imports
+	"PT", # Don't use pytest rules
 ]
 [tool.ruff.format]
 quote-style = "single"
