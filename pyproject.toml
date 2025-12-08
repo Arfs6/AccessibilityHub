@@ -36,7 +36,7 @@ dev = [
 "fabric",
 ]
 production = [
-	"unicorn",
+	"gunicorn",
 ]
 
 	[tool.hatch.envs.default]
@@ -89,6 +89,8 @@ packages = ["src/accessibilityHub"]
 exclude = [
 "migrations", # Automatically generated code by django-admin
 ]
+
+[tool.ruff.lint]
 ignore = [
 	"N999", # Ignore camel case for package and models names
 	"N816", # Ignore camel case for global variable
