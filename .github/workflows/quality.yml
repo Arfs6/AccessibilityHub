@@ -17,6 +17,6 @@ jobs:
       - name: setup django
         run: hatch run random-secret-key >> .env
       - name: run tests
-        run: hatch run src/accessibilityHub/manage.py test tests
+        run: hatch run src/accessibilityHub/manage.py test src/accessibilityHub/tests
       - name: run ruff with hatch
         run: hatch fmt --check
