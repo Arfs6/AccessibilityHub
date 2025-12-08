@@ -1,4 +1,4 @@
-Name: Code Quality  # Testing, Linting and formatting
+name: Code Quality  # Testing, Linting and formatting
 
 on:
   push:
