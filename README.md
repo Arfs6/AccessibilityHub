@@ -25,6 +25,15 @@ You need [hatch](#hatch) to be able to run the website locally. Make sure you ha
 
 Wait for hatch to finish setting up the project. Then you can open your browser and type `localhost:8000` in the address bar to open the website.
 
+### Managing Database
+
+In order to make any database operations, you'll need to generate and execute the schema using django's `manage.py` utility tool.
+
+1. **Generate schema**: `hatch run src/accessibilityHub/manage.py makemigrations`
+2. **Execute schema**: `hatch run src/accessibilityHub/manage.py migrate`
+
+Running the above commands will allow you to create and access data stored in the database, like user accounts.
+
 ### Running Tests and Ruff
 
 1. **Test**: `hatch run src/accessibilityHub/manage.py test tests`
