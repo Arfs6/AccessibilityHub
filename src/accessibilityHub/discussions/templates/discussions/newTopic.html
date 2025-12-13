@@ -14,6 +14,6 @@
 	<input type="submit" value="Create Topic">
 </form>
 {% else %}
-<p>You need to <a href="{% url "core:login" %}"> to create a topic.</p>
+<p>You need to <a href="{% url "core:login" %}">login</a> to create a topic.</p>
 {% endif %}
 {% endblock %}
