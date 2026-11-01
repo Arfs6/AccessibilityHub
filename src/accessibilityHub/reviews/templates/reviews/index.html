@@ -23,7 +23,7 @@
 		</div>
 		<div class="col s12 m12 l3">
 			{% if user.is_authenticated %}
-			<p><a href="{% url 'reviews:newTool' %}">Request new tool</a></p>
+			<p><a href="{% url 'reviews:newOwnerAndTool' %}">Request new tool</a></p>
 			{% else %}
 			<p><a href="{% url 'core:login' %}">Login to request new tool</a></p>
 			{% endif %}

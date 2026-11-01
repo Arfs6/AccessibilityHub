@@ -1,8 +1,15 @@
-from django.http import Http404, HttpRequest, HttpResponse, HttpResponseBadRequest, QueryDict
+from django.http import (
+    Http404,
+    HttpRequest,
+    HttpResponse,
+    HttpResponseBadRequest,
+    QueryDict,
+)
 from django.shortcuts import get_object_or_404, render
+from django.views import View
 from django.views.decorators.http import require_http_methods
 
-from .forms import OwnerForm, ReviewForm
+from .forms import OwnerForm, ReviewForm, ToolForm
 from .models import Owner, Review, Tool
 
 
@@ -81,14 +88,73 @@ def tool(request: HttpRequest, ownerBase36Id: str, toolSlug: str) -> HttpRespons
     )
 
 
-def newTool(request: HttpRequest) -> HttpResponse:
-    """This view allows a user to request for creation of new tools to be reviewd."""
-    form = OwnerForm()
-    context = {
-        'title': 'Request New Tool',
-        'form': form,
-    }
-    return render(request, 'reviews/new_tool.html', context)
+class NewOwnerAndTool(View):
+    """Create an owner and a tool using a two-step form."""
+
+    http_method_names = ('get', 'post')
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        """This is the starting point of owner and tool creation.
+        It returns a form for owner creation.
+        """
+        form = OwnerForm()
+        context = {
+            'title': 'Request New Tool',
+            'form': form,
+            'formName': OwnerForm.__name__,
+        }
+        return render(request, 'reviews/new_tool.html', context)
+
+    def post(self, request: HttpRequest) -> HttpResponse:
+        """Handle the owner form or the tool form, based on `formName`."""
+        formName = request.POST.get('formName')
+        if formName == OwnerForm.__name__:
+            return self.newOwner(request)
+        if formName == ToolForm.__name__:
+            return self.newTool(request)
+        return HttpResponseBadRequest(f'Invalid `formName` field: {formName}'.encode())
+
+    def newOwner(self, request: HttpRequest) -> HttpResponse:
+        """Verifies form for creation of owner and returns a form for creating tool."""
+        form = OwnerForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            initial = {
+                'ownerName': data['name'],
+                'ownerDescription': data['description'],
+                'ownerUrl': data['url'],
+            }
+            newForm = ToolForm(initial=initial)
+            context = {'form': newForm, 'formName': ToolForm.__name__}
+            return render(request, 'reviews/new_tool_form.html', context)
+
+        context = {'form': form, 'formName': OwnerForm.__name__}
+        return render(request, 'reviews/new_owner_form.html', context=context)
+
+    def newTool(self, request: HttpRequest) -> HttpResponse:
+        """Verifies the form for creating tool.
+        If form is valid, it creates a new tool and owner with the given data,
+        and it returns a success message.
+        """
+        form = ToolForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            owner = Owner()
+            owner.name = data['ownerName']
+            owner.description = data['ownerDescription']
+            owner.url = data['ownerUrl']
+            owner.save()
+            tool = Tool()
+            tool.name = data['name']
+            tool.description = data['description']
+            tool.url = data['url']
+            tool.owner_id = owner.id
+            tool.save()
+            return render(request, 'reviews/new_tool_success.html')
+
+        # invalid form.
+        context = {'form': form, 'formName': ToolForm.__name__}
+        return render(request, 'reviews/new_tool_form.html', context=context)
 
 
 @require_http_methods(['GET'])

@@ -53,15 +53,15 @@ class TestURLPatterns(SimpleTestCase):
         self.assertEqual(str(tool.pattern), 'owners/<str:ownerBase36Id>/<str:toolSlug>')
         self.assertEqual(tool.callback, views.tool)
 
-    def test_newTool(self):
-        """Test for the new tool url pattern."""
-        newTool = None
+    def test_newOwnerAndTool(self):
+        """Test for the new owner and tool url pattern."""
+        newOwnerAndTool = None
         for urlPattern in urls.urlpatterns:
-            if urlPattern.name == 'newTool':
-                newTool = urlPattern
-        self.assertIsNotNone(newTool)
-        self.assertEqual(str(newTool.name), 'newTool')
-        self.assertEqual(newTool.callback, views.newTool)
+            if urlPattern.name == 'newOwnerAndTool':
+                newOwnerAndTool = urlPattern
+        self.assertIsNotNone(newOwnerAndTool)
+        self.assertEqual(str(newOwnerAndTool.pattern), 'new')
+        self.assertIs(newOwnerAndTool.callback.view_class, views.NewOwnerAndTool)
 
     def test_search(self):
         """Test for the search url pattern."""
@@ -184,12 +184,58 @@ class TestURLS(TestCase):
         _form = forms.ReviewForm(instance=tool.reviews.get(user=user))
 
     def test_new(self):
-        """Test for the new url."""
-        newUrl = 'reviews:newTool'
+        """Test the two-step owner and tool creation flow."""
+        newUrl = 'reviews:newOwnerAndTool'
         response = self.client.get(reverse(newUrl))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'reviews/new_tool.html')
         self.assertEqual(response.context['title'], 'Request New Tool')
+        self.assertIsInstance(response.context['form'], forms.OwnerForm)
+        self.assertEqual(response.context['formName'], forms.OwnerForm.__name__)
+
+        ownerData = {
+            'formName': forms.OwnerForm.__name__,
+            'name': 'Test Owner',
+            'url': 'https://owner.example',
+            'description': 'A test owner.',
+        }
+        response = self.client.post(reverse(newUrl), data=ownerData)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'reviews/new_tool_form.html')
+        self.assertIsInstance(response.context['form'], forms.ToolForm)
+        self.assertEqual(response.context['formName'], forms.ToolForm.__name__)
+        self.assertEqual(response.context['form'].initial['ownerName'], ownerData['name'])
+
+        response = self.client.post(reverse(newUrl), data={'formName': forms.OwnerForm.__name__})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'reviews/new_owner_form.html')
+        self.assertIsInstance(response.context['form'], forms.OwnerForm)
+        self.assertTrue(response.context['form'].errors)
+
+        toolData = {
+            'formName': forms.ToolForm.__name__,
+            'name': 'Test Tool',
+            'url': 'https://tool.example',
+            'description': 'A test tool.',
+            'ownerName': ownerData['name'],
+            'ownerUrl': ownerData['url'],
+            'ownerDescription': ownerData['description'],
+        }
+        response = self.client.post(reverse(newUrl), data=toolData)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'reviews/new_tool_success.html')
+        owner = models.Owner.objects.get(name=ownerData['name'])
+        tool = models.Tool.objects.get(name=toolData['name'])
+        self.assertEqual(tool.owner, owner)
+
+        response = self.client.post(reverse(newUrl), data={'formName': forms.ToolForm.__name__})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'reviews/new_tool_form.html')
+        self.assertIsInstance(response.context['form'], forms.ToolForm)
+        self.assertTrue(response.context['form'].errors)
+
+        response = self.client.post(reverse(newUrl), data={'formName': 'UnknownForm'})
+        self.assertEqual(response.status_code, 400)
 
     def test_search(self):
         """Test for the search url."""

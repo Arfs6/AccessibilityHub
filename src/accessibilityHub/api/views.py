@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
 from django.http import HttpRequest, HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404, render
-from reviews.forms import OwnerForm, ReviewForm, ToolForm
-from reviews.models import Owner, Review, Tool
+from reviews.forms import ReviewForm
+from reviews.models import Review, Tool
 
 
 def createReview(request: HttpRequest, toolId: int) -> HttpResponse:
@@ -30,49 +30,3 @@ def createReview(request: HttpRequest, toolId: int) -> HttpResponse:
         'tool': tool,
     }
     return render(request, 'api/review_form.html', context)
-
-
-def newOwner(request: HttpRequest) -> HttpResponse:
-    """Verifies form for creation of owner and returns a form for creating tool."""
-    if request.method != 'POST':
-        return HttpResponseNotAllowed(['POST'])
-
-    form = OwnerForm(request.POST)
-    if form.is_valid():
-        data = form.cleaned_data
-        initial = {
-            'ownerName': data['name'],
-            'ownerDescription': data['description'],
-            'ownerUrl': data['url'],
-        }
-        newForm = ToolForm(initial=initial)
-        context = {'form': newForm}
-        return render(request, 'api/new_tool_form.html', context)
-
-    context = {'form': form}
-    return render(request, 'api/new_owner_form.html', context=context)
-
-
-def newTool(request: HttpRequest) -> HttpResponse:
-    """Creation of tools."""
-    if request.method != 'POST':
-        return HttpResponseNotAllowed(['POST'])
-
-    form = ToolForm(request.POST)
-    if form.is_valid():
-        data = form.cleaned_data
-        owner = Owner()
-        owner.name = data['ownerName']
-        owner.description = data['ownerDescription']
-        owner.url = data['ownerUrl']
-        owner.save()
-        tool = Tool()
-        tool.name = data['name']
-        tool.description = data['description']
-        tool.url = data['url']
-        tool.owner_id = owner.id
-        tool.save()
-        return render(request, 'api/new_tool_success.html')
-
-    context = {'form': form}
-    return render(request, 'api/new_tool_form.html', context=context)

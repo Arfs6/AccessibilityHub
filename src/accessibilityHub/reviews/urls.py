@@ -13,6 +13,6 @@ urlpatterns = [
     ),
     path('owners/<str:base36Id>', views.owner, name='owner'),
     path('owners/<str:ownerBase36Id>/<str:toolSlug>', views.tool, name='tool'),
-    path('new', views.newTool, name='newTool'),
+    path('new', views.NewOwnerAndTool.as_view(), name='newOwnerAndTool'),
     path('search', views.search, name='search'),
 ]
