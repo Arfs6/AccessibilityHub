@@ -1,15 +1,15 @@
 <!-- Header template -->
 {% load static %}
-<nav class="teal z-depth3">
+<nav class="teal darken-3 z-depth3" aria-label="Main">
 	<div class="nav-wrapper">
-		<a href="{% url 'core:home' %}" class="blue-text text-darken-4 brand-logo">
-			<span style="font-style: italic;" class="red-text"><b>A</b></span>ccessibility <span class="red-text"><b>H</b></span>ub
+		<a href="{% url 'core:home' %}" class="brand-logo">
+			<span style="font-style: italic;" class="amber-text text-lighten-2"><b>A</b></span>ccessibility <span class="amber-text text-lighten-2"><b>H</b></span>ub
 		</a>
 		<ul class="right hide-on-med-and-down">
 			{% include 'core/siteNavigation.html' %}
 		</ul>
-		<a href="#" data-target="mobile-sidenav" class="sidenav-trigger">
-			<i class="material-icons">menu</i>
+		<a href="#" data-target="mobile-sidenav" class="sidenav-trigger" aria-label="Open navigation menu">
+			<i class="material-icons" aria-hidden="true">menu</i>
 		</a>
 		<ul class="sidenav hide-on-large-only" id="mobile-sidenav">
 			{% include 'core/siteNavigation.html'%}
