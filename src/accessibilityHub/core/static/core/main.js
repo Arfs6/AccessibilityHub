@@ -15,20 +15,31 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	var closeButton = document.getElementById('demo-banner-close');
 	var dismissTimer;
+	var observer;
+	var hasBeenViewed = false;
 
-	function markSeen() {
+	function rememberSeen() {
 		try {
 			window.localStorage.setItem('accessibilityhub-demo-banner-seen', 'true');
 		} catch {}
+	}
+
+	function markSeen() {
+		rememberSeen();
 		document.documentElement.classList.add('demo-banner-seen');
 	}
 
 	function dismiss() {
 		window.clearTimeout(dismissTimer);
 		markSeen();
+		if (observer) {
+			observer.disconnect();
+		}
 		banner.classList.add('demo-banner-closing');
 		window.setTimeout(function () {
-			banner.remove();
+			if (banner.parentNode) {
+				banner.remove();
+			}
 		}, 250);
 	}
 
@@ -37,17 +48,23 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 
 	if ('IntersectionObserver' in window) {
-		var observer = new IntersectionObserver(
+		observer = new IntersectionObserver(
 			function (entries) {
 				entries.forEach(function (entry) {
 					if (entry.isIntersecting) {
+						hasBeenViewed = true;
+						rememberSeen();
+						window.clearTimeout(dismissTimer);
 						dismissTimer = window.setTimeout(dismiss, 10000);
 					} else {
 						window.clearTimeout(dismissTimer);
+						if (hasBeenViewed) {
+							dismiss();
+						}
 					}
 				});
 			},
-			{ threshold: 0.5 }
+			{ threshold: 0.25 }
 		);
 		observer.observe(banner);
 	} else {

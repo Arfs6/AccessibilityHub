@@ -243,6 +243,14 @@ nav {
 	padding: 0 0.25rem;
 }
 
+.nav-wrapper > ul.right {
+	display: none;
+}
+
+nav a.sidenav-trigger {
+	display: block !important;
+}
+
 .nav-wrapper .brand-logo {
 	max-width: calc(100% - 7rem);
 	padding: 0 0.5rem;
@@ -266,6 +274,27 @@ nav {
 .sidenav a,
 .sidenav a:visited {
 	color: #1A1C1E;
+}
+
+@media only screen and (max-width: 1099.98px) {
+	.nav-wrapper .brand-logo {
+		left: 50%;
+		transform: translateX(-50%);
+	}
+}
+
+@media only screen and (min-width: 1100px) {
+	.nav-wrapper > ul.right {
+		display: block;
+	}
+
+	nav a.sidenav-trigger {
+		display: none !important;
+	}
+
+	#mobile-sidenav {
+		display: none !important;
+	}
 }
 
 .page-footer {
