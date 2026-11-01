@@ -11,6 +11,9 @@
 	--page-bg: #05143F;
 	--surface: #0B2358;
 	--surface-light: #12306E;
+	--accent: #8AB4F8;
+	--accent-hover: #FFB4A9;
+	--accent-visited: #D0BCFF;
 	--border: rgba(237, 245, 255, 0.32);
 	--muted: rgba(237, 245, 255, 0.78);
 }
@@ -48,38 +51,127 @@ dd {
 }
 
 a {
-	text-decoration: none;
-	color: #0000FF;
-	/* blue */
+	text-decoration: underline;
+	color: var(--accent);
 	cursor: pointer;
 }
 
-a:hover {
-	text-decoration: underline;
-	color: #FF0000;
-	/* red */
+a:hover,
+a:focus {
+	color: var(--accent-hover);
 }
 
 a:visited {
-	color: #800080;
-	/* purple */
+	color: var(--accent-visited);
+}
+
+.errorlist {
+	margin: 0.25rem 0 0.75rem;
+	padding-left: 1.25rem;
 }
 
 .errorlist li {
-	color: red;
+	color: #FFB4A9;
 }
 
 form {
 	color: var(--blue-off-white);
 }
 
-form input[type="text"] {
-	color: var(--blue-off-white);
+form > div,
+form > p {
+	margin-bottom: 1rem;
 }
 
-form textarea {
-	/* color: var(--blue-off-white); */
-	background-color: teal;
+form label {
+	display: block;
+	margin-bottom: 0.35rem;
+	color: var(--blue-off-white);
+	font-size: 0.95rem;
+	font-weight: 600;
+}
+
+input[type="text"]:not(.browser-default),
+input[type="email"]:not(.browser-default),
+input[type="password"]:not(.browser-default),
+input[type="url"]:not(.browser-default),
+input[type="search"]:not(.browser-default),
+input[type="number"]:not(.browser-default),
+input[type="tel"]:not(.browser-default),
+textarea,
+select {
+	width: 100%;
+	height: auto;
+	box-sizing: border-box;
+	padding: 0.6rem 0.75rem;
+	color: var(--blue-off-white);
+	background-color: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: 4px;
+	font-family: inherit;
+	font-size: 1rem;
+}
+
+select {
+	opacity: 1;
+}
+
+input[type="text"]:not(.browser-default):focus,
+input[type="email"]:not(.browser-default):focus,
+input[type="password"]:not(.browser-default):focus,
+input[type="url"]:not(.browser-default):focus,
+input[type="search"]:not(.browser-default):focus,
+input[type="number"]:not(.browser-default):focus,
+input[type="tel"]:not(.browser-default):focus,
+textarea:focus:not([readonly]),
+select:focus {
+	outline: 2px solid var(--accent);
+	outline-offset: 1px;
+	border-color: var(--accent);
+	box-shadow: none;
+}
+
+textarea {
+	min-height: 8rem;
+	resize: vertical;
+}
+
+form .helptext,
+form .helptext li {
+	color: var(--muted);
+	font-size: 0.875rem;
+}
+
+form .helptext ul {
+	margin: 0.35rem 0 0.75rem;
+	padding-left: 1.25rem;
+}
+
+form input[type="submit"],
+form button,
+.btn {
+	height: auto;
+	min-height: 2.75rem;
+	padding: 0.5rem 1.25rem;
+	color: var(--page-bg);
+	background-color: var(--accent);
+	border: 1px solid transparent;
+	border-radius: 4px;
+	font-family: inherit;
+	font-size: 1rem;
+	font-weight: 600;
+	line-height: 1.5;
+	cursor: pointer;
+}
+
+form input[type="submit"]:hover,
+form input[type="submit"]:focus,
+form button:hover,
+form button:focus,
+.btn:hover,
+.btn:focus {
+	color: var(--page-bg);
+	background-color: #A5C6FF;
 }
 
 nav {
@@ -104,8 +196,15 @@ nav {
 	color: #FFFFFF;
 }
 
-.nav-wrapper > ul.right a {
+.nav-wrapper > ul.right a,
+.nav-wrapper > ul.right a:visited {
 	padding: 0 0.75rem;
+	color: #FFFFFF;
+}
+
+.sidenav a,
+.sidenav a:visited {
+	color: #1A1C1E;
 }
 
 .page-footer {
