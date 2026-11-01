@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
-	if (window.M) {
-		M.AutoInit();
+	if (window.M && M.Sidenav) {
+		M.Sidenav.init(document.querySelectorAll('.sidenav'));
 	}
 
 	var banner = document.getElementById('demo-banner');
