@@ -8,16 +8,43 @@
 * variables
 */
 	--blue-off-white: #EDF5FF;
+	--page-bg: #05143F;
+	--surface: #0B2358;
+	--surface-light: #12306E;
+	--border: rgba(237, 245, 255, 0.32);
+	--muted: rgba(237, 245, 255, 0.78);
 }
 
 body {
 	font-family: 'Noto Sans', "Segoe UI", sans-serif;
-	background-color: #05143F;
+	background-color: var(--page-bg);
 	color: var(--blue-off-white);
+	line-height: 1.6;
+	overflow-wrap: break-word;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	line-height: 1.25;
+	overflow-wrap: break-word;
+}
+
+p,
+li,
+blockquote,
+figcaption,
+td,
+th,
+dd {
+	overflow-wrap: break-word;
 }
 
 .blue-off-white-text {
-	color: #EDF5FF;
+	color: var(--blue-off-white);
 }
 
 a {
@@ -25,18 +52,17 @@ a {
 	color: #0000FF;
 	/* blue */
 	cursor: pointer;
+}
 
-	:hover {
-		text-decoration: underline;
-		color: #FF0000;
-		/* red */
-	}
+a:hover {
+	text-decoration: underline;
+	color: #FF0000;
+	/* red */
+}
 
-	:visited {
-		color: #800080;
-		/* purple */
-	}
-
+a:visited {
+	color: #800080;
+	/* purple */
 }
 
 .errorlist li {
@@ -45,16 +71,43 @@ a {
 
 form {
 	color: var(--blue-off-white);
+}
 
-	input[type="text"] {
-		color: var(--blue-off-white);
-	}
-	textarea {
-		/* color: var(--blue-off-white); */
-		background-color: teal;
-	}
+form input[type="text"] {
+	color: var(--blue-off-white);
+}
+
+form textarea {
+	/* color: var(--blue-off-white); */
+	background-color: teal;
 }
 
 nav {
 	color: teal;
+}
+
+@media screen and (max-width: 600px) {
+	h1 {
+		font-size: 2.1rem;
+	}
+
+	h2 {
+		font-size: 1.7rem;
+	}
+
+	h3 {
+		font-size: 1.4rem;
+	}
+
+	h4 {
+		font-size: 1.25rem;
+	}
+
+	h5 {
+		font-size: 1.1rem;
+	}
+
+	h6 {
+		font-size: 1rem;
+	}
 }
