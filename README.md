@@ -57,12 +57,11 @@ Here are the key components of Accessibility Hub:
 
 Accessibility hub is built with the [django](https://www.djangoproject.com) framework. I chose django for its "batteries included" nature, it comes with most of the things I need to build a backend.
 
-There are four (4) apps in the django project:
+There are three (3) apps in the django project:
 
 - `core`: Shared logic, templates and general pages.
 - `discussions`: Handle all discussions related features.
-- `review`: Handles all reviews related features.
-- `api`: Has mini views and templates. This may be removed in the future.
+- `reviews`: Handles all reviews related features.
 
 The [`django-htmx`](https://django-htmx.readthedocs.io/en/latest/) middleware was added to streamline htmx usage.
 

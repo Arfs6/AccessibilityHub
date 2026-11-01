@@ -50,7 +50,6 @@ if hatchEnv == DEFAULT:
 INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'reviews.apps.ReviewsConfig',
-    'api.apps.ApiConfig',
     'discussions.apps.DiscussionsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
