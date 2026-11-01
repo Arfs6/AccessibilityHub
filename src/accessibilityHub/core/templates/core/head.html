@@ -16,3 +16,15 @@
 
 <!--Site css-->
 <link rel="stylesheet" type="text/css" href="{% static 'core/main.css' %}">
+
+<script>
+	(function () {
+		try {
+			if (window.localStorage.getItem('accessibilityhub-demo-banner-seen') === 'true') {
+				document.documentElement.classList.add('demo-banner-seen');
+			}
+		} catch (error) {
+			return;
+		}
+	})();
+</script>

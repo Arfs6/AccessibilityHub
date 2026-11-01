@@ -50,6 +50,67 @@ dd {
 	color: var(--blue-off-white);
 }
 
+.site-tagline {
+	margin: 1rem 0;
+	color: var(--muted);
+	font-size: 1.15rem;
+}
+
+.demo-banner {
+	display: flex;
+	align-items: flex-start;
+	gap: 1rem;
+	margin: 1rem 0 1.5rem;
+	padding: 1rem 1rem 1rem 1.25rem;
+	background-color: var(--surface);
+	border: 1px solid var(--border);
+	border-left: 4px solid var(--accent);
+	border-radius: 4px;
+}
+
+.demo-banner h2 {
+	margin: 0 0 0.35rem;
+	font-size: 1.25rem;
+}
+
+.demo-banner p {
+	margin: 0;
+}
+
+.demo-banner-close {
+	flex: 0 0 auto;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.5rem;
+	height: 2.5rem;
+	padding: 0;
+	color: var(--blue-off-white);
+	background-color: transparent;
+	border: 1px solid var(--border);
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+.demo-banner-close:hover,
+.demo-banner-close:focus {
+	background-color: var(--surface-light);
+}
+
+.demo-banner-close .material-icons {
+	font-size: 1.25rem;
+}
+
+.demo-banner-seen .demo-banner {
+	display: none;
+}
+
+.demo-banner-closing {
+	opacity: 0;
+	transform: translateY(-0.5rem);
+	transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
 a {
 	text-decoration: underline;
 	color: var(--accent);
