@@ -1,18 +1,21 @@
-<!-- Header template -->
-{% load static %}
-<nav class="teal darken-3 z-depth3" aria-label="Main">
-	<div class="nav-wrapper">
+<nav class="navbar" aria-label="Main">
+	<div class="nav-wrapper container">
 		<a href="{% url 'core:home' %}" class="brand-logo">
-			<span style="font-style: italic;" class="amber-text text-lighten-4"><b>A</b></span>ccessibility <span class="amber-text text-lighten-4"><b>H</b></span>ub
+			<i class="material-icons" aria-hidden="true">accessible</i>
+			<span>Accessibility Hub</span>
 		</a>
-		<ul class="right">
+		<ul class="right hide-on-med-and-down" id="nav-primary">
 			{% include 'core/siteNavigation.html' %}
 		</ul>
-		<a href="#" data-target="mobile-sidenav" class="sidenav-trigger" aria-label="Open navigation menu">
+		<button class="sidenav-trigger show-on-medium-and-down" type="button"
+			data-target="mobile-sidenav" aria-label="Open navigation menu"
+			aria-expanded="false" aria-controls="mobile-sidenav">
 			<i class="material-icons" aria-hidden="true">menu</i>
-		</a>
-		<ul class="sidenav" id="mobile-sidenav">
-			{% include 'core/siteNavigation.html'%}
-		</ul>
+		</button>
 	</div>
+</nav>
+<nav class="sidenav" id="mobile-sidenav" aria-label="Mobile" aria-hidden="true" inert>
+	<ul>
+		{% include 'core/siteNavigation.html' %}
+	</ul>
 </nav>

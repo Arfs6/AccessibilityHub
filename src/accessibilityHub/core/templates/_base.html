@@ -1,47 +1,48 @@
 <!DOCTYPE html>
-<!-- core/base.html -->
 {% load static %}
 <html lang="en">
 
 <head>
 	{% include "core/head.html" %}
+	{% block meta_description %}<meta name="description"
+		content="Accessibility Hub: community reviews and discussions about the accessibility of digital and physical tools.">{% endblock %}
 	{% block title %}{% endblock %}
 </head>
 
-<body id="#body" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+	<a class="skip-link" href="#main-content">Skip to main content</a>
+	<header>
+		{% include "core/header.html" %}
+	</header>
 	<div class="container">
-		<header>
-			{% include "core/header.html" %}
-		</header>
-		<main>
+		<p class="site-tagline"><i>Your accessibility focused community</i></p>
 
-			<p class="site-tagline"><i>Your accessibility focused community</i></p>
-
-			<section class="demo-banner" id="demo-banner" aria-label="Demo">
-				<div>
-					<h2>Demo</h2>
-					<p>Accessibility hub is currently in demo. All data would be wiped out when moving
-						to production, so you shouldn't rely on it, and you can do whatever you want
-						with it.</p>
-				</div>
-				<button class="demo-banner-close" id="demo-banner-close" type="button"
-					aria-label="Dismiss demo notice">
-					<i class="material-icons" aria-hidden="true">close</i>
-				</button>
-			</section>
-			<div class="main-content" id="main-content">
-				{% block content %}{% endblock %}
+		<section class="demo-banner" id="demo-banner" aria-label="Demo">
+			<div>
+				<p class="demo-banner-title">Demo</p>
+				<p>Accessibility hub is currently in demo. All data would be wiped out when moving
+					to production, so you shouldn't rely on it, and you can do whatever you want
+					with it.</p>
 			</div>
+			<button class="demo-banner-close" id="demo-banner-close" type="button"
+				aria-label="Dismiss demo notice">
+				<i class="material-icons" aria-hidden="true">close</i>
+			</button>
+		</section>
 
+		<main id="main-content" tabindex="-1">
+			{% block content %}{% endblock %}
 		</main>
-
-		<footer class="page-footer teal darken-3">
-			{% include "core/footer.html" %}
-		</footer>
 	</div>
-	<!-- Compiled and minified JavaScript -->
+
+	<footer class="site-footer">
+		{% include "core/footer.html" %}
+	</footer>
+
 	<script
-		src=" https://cdn.jsdelivr.net/npm/@materializecss/materialize@2.0.3/dist/js/materialize.min.js "></script>
+		src="https://cdn.jsdelivr.net/npm/@materializecss/materialize@2.4.0/dist/js/materialize.min.js"
+		integrity="sha384-W68OcORCPalZZyMuWcjybq1ANvVt8n+pE4nReD16nkRj5IgqAQmadPBkPi0gC3oX"
+		crossorigin="anonymous"></script>
 	<script src="{% static 'core/main.js' %}"></script>
 </body>
 

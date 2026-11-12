@@ -1,10 +1,14 @@
 """Tests for core templates and their supporting frontend assets."""
 
+import re
 from pathlib import Path
 
+from django.contrib.auth import get_user_model
 from django.contrib.staticfiles import finders
+from django.template import loader
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 
 
 class TestDemoBanner(TestCase):
@@ -29,7 +33,7 @@ class TestDemoBanner(TestCase):
         """The banner should be remembered as soon as it is visible."""
         scriptPath = finders.find('core/main.js')
         self.assertIsNotNone(scriptPath)
-        script = Path(scriptPath).read_text()
+        script = Path(scriptPath).read_text(encoding='utf-8')
 
         self.assertIn('accessibilityhub-demo-banner-seen', script)
         self.assertIn('rememberSeen', script)
@@ -39,33 +43,238 @@ class TestDemoBanner(TestCase):
         """Leaving the viewport after viewing the banner should dismiss it."""
         scriptPath = finders.find('core/main.js')
         self.assertIsNotNone(scriptPath)
-        script = Path(scriptPath).read_text()
+        script = Path(scriptPath).read_text(encoding='utf-8')
 
         self.assertIn('IntersectionObserver', script)
         self.assertIn('threshold: 0.25', script)
         self.assertIn('observer.disconnect()', script)
         self.assertIn('hasBeenViewed', script)
 
+    def test_banner_livesOutsideMainSwapTarget(self):
+        """A htmx swap must not destroy the banner while its timer is running."""
+        response = self.client.get(reverse('core:home'))
+        html = response.content.decode()
+
+        self.assertLess(html.index('id="demo-banner"'), html.index('<main id="main-content"'))
+
 
 class TestNavigationHeader(TestCase):
     """Tests for the responsive navigation header."""
 
-    def test_homePage_usesSingleResponsiveNavigation(self):
-        """The menus should not use conflicting Materialize visibility classes."""
+    def test_homePage_usesFrameworkResponsiveNavigation(self):
+        """The menus should use Materialize's 993 px visibility utilities."""
         response = self.client.get(reverse('core:home'))
         html = response.content.decode()
 
-        self.assertNotIn('hide-on-med-and-down', html)
+        self.assertIn('hide-on-med-and-down', html)
+        self.assertIn('show-on-medium-and-down', html)
         self.assertNotIn('hide-on-large-only', html)
-        self.assertIn('id="mobile-sidenav"', html)
+        self.assertIn(
+            '<nav class="sidenav" id="mobile-sidenav" aria-label="Mobile" aria-hidden="true" inert>',
+            html,
+        )
         self.assertIn('aria-label="Open navigation menu"', html)
+        self.assertIn('aria-controls="mobile-sidenav"', html)
+        self.assertIn('aria-expanded="false"', html)
+        self.assertIn('id="nav-primary"', html)
 
-    def test_mainCss_switchesNavigationAtTabletBreakpoint(self):
-        """The header should switch layouts only when there is room."""
+    def test_authenticated_logoutIsKeyboardFocusable(self):
+        """Logout performs an action, so it must be a real focusable button."""
+        user = get_user_model().objects.create_user(
+            username='logout-test',
+            password='unused-password',
+        )
+        self.client.force_login(user)
+
+        response = self.client.get(reverse('core:home'))
+        html = response.content.decode()
+
+        self.assertIn('type="button" class="nav-link" hx-delete="', html)
+        self.assertNotIn('<a hx-delete=', html)
+
+    def test_mainCss_removesCustomNavigationBreakpoint(self):
+        """The custom 1100 px breakpoint is replaced by the framework utility."""
         cssPath = finders.find('core/main.css')
         self.assertIsNotNone(cssPath)
-        css = Path(cssPath).read_text()
+        css = Path(cssPath).read_text(encoding='utf-8')
 
-        self.assertIn('@media only screen and (max-width: 1099.98px)', css)
-        self.assertIn('@media only screen and (min-width: 1100px)', css)
-        self.assertIn('#mobile-sidenav', css)
+        self.assertNotIn('1099.98px', css)
+        self.assertNotIn('1100px', css)
+        self.assertIn('.navbar', css)
+
+    def test_page_marksCurrentSection(self):
+        """The active section should carry aria-current, not only colour."""
+        response = self.client.get(reverse('reviews:index'))
+        html = response.content.decode()
+        reviewsUrl = reverse('reviews:index')
+
+        self.assertRegex(
+            html,
+            rf'<a href="{re.escape(reviewsUrl)}"[^>]*aria-current="page"',
+        )
+
+
+class TestThemeSystem(TestCase):
+    """Tests for the dual-theme boot, toggle, and assets."""
+
+    def test_head_bootsThemeAndBannerState(self):
+        """The single early script should set the theme and remember the banner."""
+        response = self.client.get(reverse('core:home'))
+
+        self.assertContains(response, 'accessibilityhub-theme')
+        self.assertContains(response, 'document.documentElement.dataset.theme')
+        self.assertContains(response, 'prefers-color-scheme: light')
+        self.assertContains(response, 'name="theme-color"')
+
+    def test_navigation_hasThemeToggle(self):
+        """Every navigation copy should expose the same accessible toggle state."""
+        response = self.client.get(reverse('core:home'))
+        html = response.content.decode()
+        toggles = re.findall(r'<button[^>]*data-theme-toggle[^>]*>', html)
+
+        self.assertEqual(len(toggles), 2)
+        for toggle in toggles:
+            self.assertIn('aria-pressed="false"', toggle)
+        self.assertEqual(html.count('>Light theme</span>'), 2)
+        self.assertEqual(html.count('theme-icon-dark'), 2)
+        self.assertEqual(html.count('theme-icon-light'), 2)
+
+    def test_mainCss_choosesThemeIconFromAttribute(self):
+        """The correct icon should paint before JavaScript updates the toggle."""
+        cssPath = finders.find('core/main.css')
+        self.assertIsNotNone(cssPath)
+        css = Path(cssPath).read_text(encoding='utf-8')
+
+        self.assertIn(':root[data-theme="light"] .theme-toggle .theme-icon-dark', css)
+        self.assertIn(':root[data-theme="light"] .theme-toggle .theme-icon-light', css)
+
+    def test_mainJs_appliesAndPersistsTheme(self):
+        """The toggle should update the attribute and save the choice."""
+        scriptPath = finders.find('core/main.js')
+        self.assertIsNotNone(scriptPath)
+        script = Path(scriptPath).read_text(encoding='utf-8')
+
+        self.assertIn('applyTheme', script)
+        self.assertIn('accessibilityhub-theme', script)
+        self.assertIn('localStorage.setItem', script)
+        self.assertIn('aria-pressed', script)
+        self.assertIn('prefers-reduced-motion: reduce', script)
+
+    def test_mainJs_drivesSidenavFromInstance(self):
+        """Sidenav focus, inert state, and escape handling should follow the instance."""
+        scriptPath = finders.find('core/main.js')
+        self.assertIsNotNone(scriptPath)
+        script = Path(scriptPath).read_text(encoding='utf-8')
+
+        self.assertIn('onOpenStart', script)
+        self.assertIn('onCloseStart', script)
+        self.assertIn('onCloseEnd', script)
+        self.assertIn('sidenavInstance.close()', script)
+        self.assertIn('sidenavEl.inert = !open', script)
+        self.assertIn("sidenavEl.setAttribute('aria-hidden', open ? 'false' : 'true')", script)
+        self.assertIn('!sidenavInstance || !sidenavInstance.isOpen', script)
+        self.assertIn('if (!sidenavInstance || sidenavInstance.isOpen) {', script)
+        self.assertIn("querySelector('.navbar .brand-logo')", script)
+        self.assertIn('clearPrimaryNavAriaHidden', script)
+        self.assertIn('shouldRestoreFocus', script)
+
+    def test_mainJs_trapsFocusAndClosesAtDesktopBreakpoint(self):
+        """The drawer must contain Tab focus and close when the layout becomes desktop."""
+        scriptPath = finders.find('core/main.js')
+        self.assertIsNotNone(scriptPath)
+        script = Path(scriptPath).read_text(encoding='utf-8')
+
+        self.assertIn('getSidenavControls', script)
+        self.assertIn('event.shiftKey', script)
+        self.assertIn('(min-width: 993px)', script)
+        self.assertIn('closeSidenavOnDesktop', script)
+
+    def test_mainCss_definesLightAndDarkThemes(self):
+        """Both palettes and the background layer should be in main.css."""
+        cssPath = finders.find('core/main.css')
+        self.assertIsNotNone(cssPath)
+        css = Path(cssPath).read_text(encoding='utf-8')
+
+        self.assertIn(':root[data-theme="light"]', css)
+        self.assertIn('--md-sys-color-primary', css)
+        self.assertIn('--control-border', css)
+        self.assertIn('color-scheme: dark', css)
+        self.assertIn('body::before', css)
+        self.assertIn('prefers-contrast: more', css)
+        self.assertNotIn('#A5C6FF', css)
+        self.assertNotIn('#1A1C1E', css)
+
+    def test_themeAssetsExist(self):
+        """The favicon and both background patterns should be real static assets."""
+        for asset in (
+            'core/img/favicon.svg',
+            'core/img/background-dark.webp',
+            'core/img/background-light.webp',
+        ):
+            with self.subTest(asset=asset):
+                assetPath = finders.find(asset)
+                self.assertIsNotNone(assetPath)
+                data = Path(assetPath).read_bytes()
+                self.assertGreater(len(data), 0)
+                if asset.endswith('.webp'):
+                    self.assertEqual(data[:4], b'RIFF')
+                    self.assertEqual(data[8:12], b'WEBP')
+
+
+class TestPageFrame(TestCase):
+    """Tests for the document skeleton and footer."""
+
+    def test_homePage_hasSkipLinkAndMainTarget(self):
+        """The skip link should target the real main element."""
+        response = self.client.get(reverse('core:home'))
+
+        self.assertContains(response, 'class="skip-link"')
+        self.assertContains(response, 'href="#main-content"')
+        self.assertContains(response, '<main id="main-content"')
+        self.assertContains(response, 'tabindex="-1"')
+
+    def test_head_hasDescriptionAndFavicon(self):
+        """The document should expose description metadata and a favicon."""
+        response = self.client.get(reverse('core:home'))
+
+        self.assertContains(response, 'name="description"')
+        self.assertContains(response, 'rel="icon"')
+        self.assertContains(response, 'favicon.svg')
+
+    def test_materialize_isPinnedTo240(self):
+        """The CSS and JS assets should use the verified 2.4.0 build."""
+        response = self.client.get(reverse('core:home'))
+        html = response.content.decode()
+
+        self.assertIn('materialize@2.4.0', html)
+        self.assertNotIn('materialize@2.0.3', html)
+        self.assertLess(
+            html.index('materialize@2.4.0/dist/css/materialize.min.css'),
+            html.index('core/main.css'),
+        )
+
+    def test_cdnAssetsUseSubresourceIntegrity(self):
+        """Pinned CDN scripts and styles should be verified by the browser."""
+        response = self.client.get(reverse('core:home'))
+        html = response.content.decode()
+
+        self.assertGreaterEqual(html.count('integrity="sha384-'), 3)
+        self.assertGreaterEqual(html.count('crossorigin="anonymous"'), 3)
+        self.assertIn('unpkg.com/htmx.org@1.9.6', html)
+
+    def test_footer_usesCurrentYearAndWorkingLinks(self):
+        """The footer should not keep the stale year or dead personal domain."""
+        response = self.client.get(reverse('core:home'))
+        html = response.content.decode()
+
+        self.assertIn(str(timezone.localdate().year), html)
+        self.assertIn('github.com/arfs6', html)
+        self.assertIn('GitHub', html)
+        self.assertNotIn('arfs6.me', html)
+
+    def test_footer_template_usesDynamicYear(self):
+        """The template source should use Django's now tag for the year."""
+        template = loader.get_template('core/footer.html')
+        source = Path(template.origin.name).read_text(encoding='utf-8')
+
+        self.assertIn('{% now "Y" %}', source)

@@ -1,13 +1,28 @@
-<li><a href="{% url 'reviews:index' %}"><span class="fas fa-list"></span>Reviews</a>
-</li>
-<li><a href="{% url 'discussions:landing' %}"><span class="fa-comments"></span>Discussions</a>
-</li>
-<li><a href="{% url 'core:about' %}"><span class="fas fa-info-circle"></span>About</a>
-</li>
+{% url 'reviews:index' as reviews_index_url %}
+{% url 'discussions:landing' as discussions_landing_url %}
+{% url 'core:about' as about_url %}
+{% url 'core:login' as login_url %}
+{% url 'core:signup' as signup_url %}
+{% url 'core:logout' as logout_url %}
+<li><a href="{{ reviews_index_url }}" {% if request.path == reviews_index_url %}aria-current="page"{% endif %}>
+		<i class="material-icons" aria-hidden="true">rate_review</i><span class="nav-label">Reviews</span></a></li>
+<li><a href="{{ discussions_landing_url }}" {% if request.path == discussions_landing_url %}aria-current="page"{% endif %}>
+		<i class="material-icons" aria-hidden="true">forum</i><span class="nav-label">Discussions</span></a></li>
+<li><a href="{{ about_url }}" {% if request.path == about_url %}aria-current="page"{% endif %}>
+		<i class="material-icons" aria-hidden="true">info</i><span class="nav-label">About</span></a></li>
 {% if user.is_authenticated %}
-<li><a hx-delete="{% url 'core:logout' %}?next={{ request.path }}"><span class="fas fa-sign-out-alt"></span>Logout</a></li>
+<li><button type="button" class="nav-link" hx-delete="{{ logout_url }}?next={{ request.path|urlencode }}">
+		<i class="material-icons" aria-hidden="true">logout</i><span class="nav-label">Logout</span></button></li>
 {% else %}
-<li><a href="{% url 'core:login' %}?next={{ request.path }}"><span class="fas fa-sign-in-alt"></span>Login</a></li>
-<li><a href="{% url 'core:signup' %}?next={{ request.path }}"><span class="fas fa-user-plus"></span>Create
-		Account</a></li>
+<li><a href="{{ login_url }}?next={{ request.path|urlencode }}">
+		<i class="material-icons" aria-hidden="true">login</i><span class="nav-label">Login</span></a></li>
+<li><a href="{{ signup_url }}?next={{ request.path|urlencode }}">
+		<i class="material-icons" aria-hidden="true">person_add</i><span class="nav-label">Create Account</span></a></li>
 {% endif %}
+<li>
+	<button type="button" class="theme-toggle" data-theme-toggle aria-pressed="false">
+		<i class="material-icons theme-icon theme-icon-dark" aria-hidden="true">dark_mode</i>
+		<i class="material-icons theme-icon theme-icon-light" aria-hidden="true">light_mode</i>
+		<span class="theme-toggle-label">Light theme</span>
+	</button>
+</li>
