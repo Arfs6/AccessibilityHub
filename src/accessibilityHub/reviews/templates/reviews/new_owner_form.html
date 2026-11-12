@@ -1,8 +1,13 @@
-<form hx-post="{% url 'reviews:newOwnerAndTool' %}">
-	{% csrf_token %}
-	<h2>Owner Info</h2>
-	<p>Please input the basic info of the owner of the tool you wish to add.</p>
-	<input type="hidden" name="formName" value="{{ formName }}">
-	{{ form }}
-	<input type="submit" value="Submit">
-</form>
+<div class="card">
+	<div class="card-content">
+		<form action="{% url 'reviews:newOwnerAndTool' %}" method="post" hx-post="{% url 'reviews:newOwnerAndTool' %}"
+			hx-target="#main-content" hx-swap="innerHTML">
+			{% csrf_token %}
+			<h2>Owner Info</h2>
+			<p>Please input the basic info of the owner of the tool you wish to add.</p>
+			<input type="hidden" name="formName" value="{{ formName }}">
+			{{ form }}
+			<button type="submit" class="btn btn-filled">Submit</button>
+		</form>
+	</div>
+</div>

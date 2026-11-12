@@ -8,11 +8,15 @@
 <h1>Create new Topic</h1>
 {% if request.user.is_authenticated %}
 <p>Fill in the topic details below</p>
-<form hx-post="{% url "discussions:newTopic" %}" hx-target="#main-content" hx-swap="inner">
-	{% csrf_token %}
-	{{ form }}
-	<input type="submit" value="Create Topic">
-</form>
+<div class="card">
+	<div class="card-content">
+		<form hx-post="{% url "discussions:newTopic" %}" hx-target="#main-content" hx-swap="innerHTML">
+			{% csrf_token %}
+			{{ form }}
+			<button type="submit" class="btn btn-filled">Create Topic</button>
+		</form>
+	</div>
+</div>
 {% else %}
 <p>You need to <a href="{% url "core:login" %}">login</a> to create a topic.</p>
 {% endif %}

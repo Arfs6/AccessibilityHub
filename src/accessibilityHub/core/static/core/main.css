@@ -212,15 +212,16 @@ a {
 	text-decoration: underline;
 	color: var(--link);
 	cursor: pointer;
+	transition: color 0.15s ease;
+}
+
+a:visited {
+	color: var(--link-visited);
 }
 
 a:hover,
 a:focus {
 	color: var(--link-hover);
-}
-
-a:visited {
-	color: var(--link-visited);
 }
 
 a:focus-visible,
@@ -290,6 +291,106 @@ button:focus-visible {
 	opacity: 0;
 	transform: translateY(-0.5rem);
 	transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+/**
+* Cards
+*/
+.card {
+	--background-color: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: 12px;
+	box-shadow: none;
+}
+
+.card .card-content {
+	padding: 1.25rem;
+}
+
+.card .card-content h3 {
+	font-size: 1.5rem;
+}
+
+.card .card-content form > div,
+.card .card-content form > p {
+	margin-bottom: 1rem;
+}
+
+.card .card-content form > :last-child {
+	margin-bottom: 0;
+}
+
+/**
+* Listing cards and empty states
+*/
+.listing-card .listing-meta {
+	margin: 0.35rem 0;
+	color: var(--text-muted);
+	font-size: 0.95rem;
+}
+
+.listing-card .listing-description {
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+.empty-state {
+	color: var(--text-muted);
+	text-align: center;
+}
+
+.empty-state .material-icons {
+	display: block;
+	margin-bottom: 0.5rem;
+	font-size: 2rem;
+}
+
+/**
+* Star ratings
+*/
+.stars {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.1rem;
+	color: var(--link);
+	vertical-align: middle;
+}
+
+.stars .material-icons {
+	font-size: 18px;
+}
+
+/**
+* Search toolbar
+*/
+.search-controls {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	align-items: center;
+}
+
+.search-controls input[type="search"] {
+	flex: 1 1 12rem;
+	width: auto;
+	min-width: 0;
+}
+
+.search-controls .btn {
+	flex: 0 0 auto;
+}
+
+.toolbar-action {
+	margin-top: 1rem;
+}
+
+@media only screen and (min-width: 601px) {
+	.toolbar-action {
+		margin-top: 1.85rem;
+		text-align: end;
+	}
 }
 
 /**
@@ -394,35 +495,14 @@ form .helptext ul {
 	padding-left: 1.25rem;
 }
 
-form input[type="submit"],
-form button,
-.btn {
-	height: auto;
-	min-height: 2.75rem;
-	padding: 0.5rem 1.25rem;
-	color: var(--accent-text);
-	background-color: var(--accent);
-	border: 1px solid transparent;
-	border-radius: 4px;
-	font-family: inherit;
-	font-size: 1rem;
-	font-weight: 600;
-	line-height: 1.5;
-	cursor: pointer;
-}
-
-form input[type="submit"]:hover,
-form input[type="submit"]:focus,
-form button:hover,
-form button:focus,
-.btn:hover,
-.btn:focus {
-	color: var(--accent-text);
-	background-color: var(--accent-hover-bg);
-}
-
 .btn {
 	text-decoration: none;
+	text-transform: none;
+}
+
+.btn .material-icons {
+	margin-inline-end: 0.5rem;
+	font-size: 1.125rem;
 }
 
 /**

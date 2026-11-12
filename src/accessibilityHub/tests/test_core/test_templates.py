@@ -10,6 +10,9 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
+from discussions.models import Topic
+from reviews.models import Owner, Tool
+
 
 class TestDemoBanner(TestCase):
     """Tests for the demo banner markup and behaviour."""
@@ -55,7 +58,9 @@ class TestDemoBanner(TestCase):
         response = self.client.get(reverse('core:home'))
         html = response.content.decode()
 
-        self.assertLess(html.index('id="demo-banner"'), html.index('<main id="main-content"'))
+        self.assertLess(
+            html.index('id="demo-banner"'), html.index('<main id="main-content"')
+        )
 
 
 class TestNavigationHeader(TestCase):
@@ -171,7 +176,9 @@ class TestThemeSystem(TestCase):
         self.assertIn('onCloseEnd', script)
         self.assertIn('sidenavInstance.close()', script)
         self.assertIn('sidenavEl.inert = !open', script)
-        self.assertIn("sidenavEl.setAttribute('aria-hidden', open ? 'false' : 'true')", script)
+        self.assertIn(
+            "sidenavEl.setAttribute('aria-hidden', open ? 'false' : 'true')", script
+        )
         self.assertIn('!sidenavInstance || !sidenavInstance.isOpen', script)
         self.assertIn('if (!sidenavInstance || sidenavInstance.isOpen) {', script)
         self.assertIn("querySelector('.navbar .brand-logo')", script)
@@ -278,3 +285,149 @@ class TestPageFrame(TestCase):
         source = Path(template.origin.name).read_text(encoding='utf-8')
 
         self.assertIn('{% now "Y" %}', source)
+
+
+class TestSharedComponents(TestCase):
+    """Tests for the shared card, button, and search-toolbar patterns."""
+
+    def test_authForms_useCardsAndFrameworkButtons(self):
+        """Login and signup should use card shells and framework buttons."""
+        for urlName, label in (('core:login', 'Login'), ('core:signup', 'Signup')):
+            with self.subTest(page=urlName):
+                response = self.client.get(reverse(urlName))
+                html = response.content.decode()
+
+                self.assertIn('class="card"', html)
+                self.assertIn('class="btn btn-filled"', html)
+                self.assertIn(f'>{label}</button>', html)
+                self.assertNotIn('<input type="submit"', html)
+
+    def test_logout_keepsHtmxDeleteWithCardButton(self):
+        """Logout must keep its DELETE action when restyled as a button."""
+        response = self.client.get(
+            reverse('core:logout'),
+            {'next': reverse('reviews:index')},
+        )
+        html = response.content.decode()
+
+        self.assertIn('class="card"', html)
+        self.assertIn('class="btn btn-filled"', html)
+        self.assertIn('hx-delete="', html)
+        self.assertIn('?next=', html)
+        self.assertNotIn('<input type="submit"', html)
+
+    def test_reviewAndNewToolForms_useCardsAndFrameworkButtons(self):
+        """The review and two-step new-tool forms should share the form card."""
+        user = get_user_model().objects.create_user(
+            username='reviewer',
+            password='unused-password',
+        )
+        owner = Owner.objects.create(
+            name='Example Owner',
+            url='https://example.com',
+            verified=True,
+        )
+        tool = Tool.objects.create(
+            name='Example Tool',
+            url='https://example.com/tool',
+            owner=owner,
+            verified=True,
+        )
+        self.client.force_login(user)
+
+        pages = (
+            (
+                reverse(
+                    'reviews:tool',
+                    kwargs={
+                        'ownerBase36Id': owner.base36Id,
+                        'toolSlug': tool.slug,
+                    },
+                ),
+                'Submit',
+            ),
+            (reverse('reviews:newOwnerAndTool'), 'Submit'),
+        )
+        for url, label in pages:
+            with self.subTest(page=url):
+                html = self.client.get(url).content.decode()
+
+                self.assertIn('class="card"', html)
+                self.assertIn('class="btn btn-filled"', html)
+                self.assertIn(f'>{label}</button>', html)
+                self.assertNotIn('<input type="submit"', html)
+
+    def test_topicForms_useCardsAndFrameworkButtons(self):
+        """Topic creation and commenting should use the shared form card."""
+        user = get_user_model().objects.create_user(
+            username='topic-user',
+            password='unused-password',
+        )
+        topic = Topic.objects.create(
+            name='Example Topic',
+            description='A topic for testing.',
+            createdBy=user,
+        )
+        self.client.force_login(user)
+
+        pages = (
+            (reverse('discussions:newTopic'), 'Create Topic'),
+            (
+                reverse(
+                    'discussions:topicPage',
+                    kwargs={'base36Id': topic.base36Id},
+                ),
+                'Comment',
+            ),
+        )
+        for url, label in pages:
+            with self.subTest(page=url):
+                html = self.client.get(url).content.decode()
+
+                self.assertIn('class="card"', html)
+                self.assertIn('class="btn btn-filled"', html)
+                self.assertIn(f'>{label}</button>', html)
+                self.assertNotIn('<input type="submit"', html)
+
+    def test_searchToolbars_useVisibleLabelsAndLiveRegions(self):
+        """Both indexes should expose labelled search and announced results."""
+        reviews = self.client.get(reverse('reviews:index')).content.decode()
+        self.assertIn('class="search-form"', reviews)
+        self.assertIn('for="search-term">Search tools</label>', reviews)
+        self.assertIn('role="search"', reviews)
+        self.assertIn('class="btn btn-tonal"', reviews)
+        self.assertIn('col s12 m6 l9', reviews)
+        self.assertIn('col s12 m6 l3', reviews)
+        self.assertIn('id="tool-listing" aria-live="polite"', reviews)
+        self.assertNotIn('type="submit" value=', reviews)
+
+        discussions = self.client.get(reverse('discussions:index')).content.decode()
+        self.assertIn('class="search-form"', discussions)
+        self.assertIn('for="search-term">Search topics</label>', discussions)
+        self.assertIn('role="search"', discussions)
+        self.assertNotIn('role="Search"', discussions)
+        self.assertIn('class="btn btn-tonal"', discussions)
+        self.assertIn('col s12 m6 l9', discussions)
+        self.assertIn('col s12 m6 l3', discussions)
+        self.assertIn('id="topics-listing" aria-live="polite"', discussions)
+        self.assertNotIn('type="submit" value=', discussions)
+
+    def test_mainCss_definesSharedComponents(self):
+        """The shared component classes should live in the site stylesheet."""
+        cssPath = finders.find('core/main.css')
+        self.assertIsNotNone(cssPath)
+        css = Path(cssPath).read_text(encoding='utf-8')
+
+        for token in (
+            '.card {',
+            '.card .card-content',
+            '.listing-description',
+            '.empty-state',
+            '.stars',
+            '.search-controls',
+            '.btn .material-icons',
+        ):
+            with self.subTest(token=token):
+                self.assertIn(token, css)
+
+        self.assertNotIn('form input[type="submit"]', css)

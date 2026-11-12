@@ -26,11 +26,15 @@
 </section>
 <h2>Add a comment</h2>
 {% if request.user.is_authenticated %}
-<form hx-post="{% url 'discussions:topicPage' topic.base36Id %}" hx-target="#main-content" hx-swap="inner" role="form">
-	{% csrf_token %}
-	{{ form }}
-	<input type="submit" value="Comment">
-</form>
+<div class="card">
+	<div class="card-content">
+			<form action="{% url 'discussions:topicPage' topic.base36Id %}" method="post" hx-post="{% url 'discussions:topicPage' topic.base36Id %}" hx-target="#main-content" hx-swap="innerHTML" role="form">
+			{% csrf_token %}
+			{{ form }}
+			<button type="submit" class="btn btn-filled">Comment</button>
+		</form>
+	</div>
+</div>
 {% else %}
 <p>You need to <a href="{% url 'core:login' %}?next={{ request.path }}">login</a> to add a comment.</p>
 {% endif %}

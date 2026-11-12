@@ -8,26 +8,30 @@
 <h1>Discussions</h1>
 <nav aria-label="Discussions">
 	<div class="row">
-		<div class="col s12 m12 l3">
-			<form hx-get="{% url 'discussions:search' %}" role="Search" hx-swap="inner"
+		<div class="col s12 m6 l9">
+			<form class="search-form" action="{% url 'discussions:search' %}" method="get" hx-get="{% url 'discussions:search' %}" role="search" hx-swap="innerHTML"
 				hx-target="#topics-listing">
-				{% csrf_token %}
-				<label for="search-term" style="font-size: 1.3rem;"><i
-						class="material-icons">search</i></label>
-				<input type="text" name="q" placeholder="Search" required id="search-term">
-				<input type="submit" value="search">
+				<label for="search-term">Search topics</label>
+				<div class="search-controls">
+					<input type="search" name="q" placeholder="Search" required id="search-term">
+					<button type="submit" class="btn btn-tonal">
+						<i class="material-icons" aria-hidden="true">search</i>Search
+					</button>
+				</div>
 			</form>
 		</div>
-			<div class="col s12 m12 l3">
+		<div class="col s12 m6 l3">
+			<div class="toolbar-action">
 				{% if request.user.is_authenticated %}
-				<p><a href="{% url 'discussions:newTopic' %}">New Topic</a></p>
+				<a class="btn btn-tonal" href="{% url 'discussions:newTopic' %}">New Topic</a>
 				{% else %}
-				<p><a href="{% url 'core:login' %}">Login</a> to create topic</p>
+				<a class="btn btn-tonal" href="{% url 'core:login' %}">Login to create topic</a>
 				{% endif %}
 			</div>
 		</div>
+	</div>
 </nav>
-<section aria-label="Topics listing" id="topics-listing">
+<section aria-label="Topics listing" id="topics-listing" aria-live="polite">
 	<h2>Latest Topics</h2>
 	{% if latestTopics %}
 	{% for topic in latestTopics %}
