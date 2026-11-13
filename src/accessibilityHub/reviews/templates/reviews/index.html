@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-<h1>Tools Reviews</h1>
+<h1>Tool Reviews</h1>
 <p>Discover tools reviewed and rated by the community! Your review and rating are vital to help others make informed
 	decisions on accessible tools. Join our inclusive community, share your insights, and together, let's make the
 	digital world more accessible for everyone.</p>
@@ -37,8 +37,19 @@
 <section aria-label="Tool listing" id="tool-listing" aria-live="polite">
 	<h2>All Tools</h2>
 	<p>Here is a list of all the tools that has been created.</p>
-	{% for tool in tools %}
-	{% include 'reviews/toolObject.html' with tool=tool %}
-	{% endfor %}
+	{% if tools %}
+	<div class="row">
+		{% for tool in tools %}
+		{% include 'reviews/toolObject.html' with tool=tool %}
+		{% endfor %}
+	</div>
+	{% else %}
+	<div class="card empty-state">
+		<div class="card-content">
+			<i class="material-icons" aria-hidden="true">inventory_2</i>
+			<p>No tools yet. Be the first to request one.</p>
+		</div>
+	</div>
+	{% endif %}
 </section>
 {% endblock %}

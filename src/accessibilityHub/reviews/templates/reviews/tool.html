@@ -5,35 +5,53 @@
 {% endblock %}
 
 {% block content %}
-<section aria-label="Tool info">
-	<article>
-		<h1>{{ tool.name }}</h1>
-		<p>Website: <a href="{{ tool.url }}">{{ tool.url }}</a></p>
-		<p> Average rating: {% if tool.avgRating is None %}No rating yet.{% else %}{{ tool.avgRating }} out of
-			5{% endif %}</p>
+<h1>{{ tool.name }}</h1>
+
+<section aria-label="Tool information" class="card">
+	<div class="card-content">
+		<p><i class="material-icons" aria-hidden="true">language</i> Website: <a href="{{ tool.url }}" rel="noopener">{{ tool.url }}</a></p>
+		{% if tool.avgRating is None %}
+		<p>Average rating: No rating yet.</p>
+		{% else %}
+		<p>Average rating: {{ tool.avgRating }} out of 5 {% include 'reviews/rating_stars.html' with rating=tool.avgRating %}</p>
+		{% endif %}
 		<p>Owner: <a href="{% url 'reviews:owner' base36Id=owner.base36Id %}">{{ owner.name }}</a></p>
 		<p>{{ tool.description }}</p>
-	</article>
+	</div>
 </section>
+
 <section aria-label="Comments">
 	<h2>Comments</h2>
-	{% if not reviews %}
-	<p>No comments yet.</p>
-	{% else %}
+	{% if reviews %}
 	{% for review in reviews %}
-	<article id="{{ review.user.id }}">
-		<h3>Comment by {{ review.user.get_full_name }}</h3>
-		<p>Rating: {{ review.rating }}</p>
-		<p>{{ review.comment }}</p>
+	<article class="card" id="review-{{ review.pk }}">
+		<div class="card-content">
+			<h3>Comment by {{ review.user.get_full_name }}</h3>
+			<p>Rating: {{ review.rating }} out of 5 {% include 'reviews/rating_stars.html' with rating=review.rating %}</p>
+			<p>{{ review.comment }}</p>
+		</div>
 	</article>
 	{% endfor %}
+	{% else %}
+	<div class="card empty-state">
+		<div class="card-content">
+			<i class="material-icons" aria-hidden="true">forum</i>
+			<p>No comments yet.</p>
+		</div>
+	</div>
 	{% endif %}
 </section>
 
-<h2>Your rating</h2>
-{% if form is not None %}
-{% include 'reviews/review_form.html' %}
-{% else %}
-<p>You need to <a href="{% url 'core:login' %}?next={{ request.path }}">login</a> to rate this tool.</p>
-{% endif %}
+<section aria-label="Your rating">
+	<h2>Your rating</h2>
+	{% if form is not None %}
+	<div class="row">
+		<div class="col s12 m8 l6">
+			{% include 'reviews/review_form.html' %}
+		</div>
+	</div>
+	{% else %}
+	<p>You need to <a href="{% url 'core:login' %}?next={{ request.path }}">login</a> to rate this tool.</p>
+	{% endif %}
+</section>
 {% endblock %}

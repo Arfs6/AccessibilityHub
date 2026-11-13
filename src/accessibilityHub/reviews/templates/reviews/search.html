@@ -1,8 +1,15 @@
 <h2>Search Results</h2>
 {% if tools %}
-{% for tool in tools %}
-{% include 'reviews/toolObject.html' with tool=tool %}
-{% endfor %}
+	<div class="row">
+		{% for tool in tools %}
+		{% include 'reviews/toolObject.html' with tool=tool %}
+		{% endfor %}
+	</div>
 {% else %}
-<p>Your search term did not match any tool. Please try a different term.</p>
+	<div class="card empty-state">
+		<div class="card-content">
+			<i class="material-icons" aria-hidden="true">search_off</i>
+			<p>Your search term did not match any tool. Please try a different term.</p>
+		</div>
+	</div>
 {% endif %}
