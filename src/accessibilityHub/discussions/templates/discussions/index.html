@@ -34,12 +34,25 @@
 <section aria-label="Topics listing" id="topics-listing" aria-live="polite">
 	<h2>Latest Topics</h2>
 	{% if latestTopics %}
-	{% for topic in latestTopics %}
-	<h3><a href="{% url 'discussions:topicPage' topic.base36Id %}">{{ topic.name }}</a></h3>
-	<p>Description: {{ topic.description }}</p>
-	{% endfor %}
+	<div class="row">
+		{% for topic in latestTopics %}
+		<div class="col s12 m6 l4">
+			<article class="card listing-card">
+				<div class="card-content">
+					<h3><a href="{% url 'discussions:topicPage' topic.base36Id %}">{{ topic.name }}</a></h3>
+					<p class="listing-description">{{ topic.description }}</p>
+				</div>
+			</article>
+		</div>
+		{% endfor %}
+	</div>
 	{% else %}
-	<p>No topics yet.</p>
+	<div class="card empty-state">
+		<div class="card-content">
+			<i class="material-icons" aria-hidden="true">forum</i>
+			<p>No topics yet.</p>
+		</div>
+	</div>
 	{% endif %}
 </section>
 {% endblock %}

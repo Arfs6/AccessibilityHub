@@ -7,5 +7,16 @@
 {% block content %}
 <h1>Discussions</h1>
 <p>Welcome to a hub of thought-provoking conversations dedicated to the world of accessibility! Here, you'll find a vibrant community of individuals passionate about creating inclusive experiences for everyone. Whether you're a seasoned expert or just starting your journey, this space offers an open platform.</p>
-<h2><a href="{% url 'discussions:index' %}">Index</a></h2>
+<div class="button-row">
+	<a class="btn btn-filled" href="{% url 'discussions:index' %}">
+		<i class="material-icons" aria-hidden="true">forum</i>Browse topics
+	</a>
+	{% if request.user.is_authenticated %}
+	<a class="btn btn-tonal" href="{% url 'discussions:newTopic' %}">
+		<i class="material-icons" aria-hidden="true">add</i>Start a topic
+	</a>
+	{% else %}
+	<a class="btn btn-tonal" href="{% url 'core:login' %}">Login to start a topic</a>
+	{% endif %}
+</div>
 {% endblock %}

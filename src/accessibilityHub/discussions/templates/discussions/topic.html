@@ -1,41 +1,57 @@
 {% extends baseTemplate %}
 
 {% block title %}
-<title>{{ topic.name }} - Discussions | AccessibilityHub</title>
+<title>{{ topic.name }} - Discussions | Accessibility Hub</title>
 {% endblock %}
 
 {% block content %}
-<section aria-label="Topic info">
-<article>
 <h1>{{ topic.name }}</h1>
-<p>Description: {{ topic.description }}</p>
-</article>
+
+<section aria-label="Topic information" class="card">
+	<div class="card-content">
+		<p>Description: {{ topic.description }}</p>
+	</div>
 </section>
+
 <section aria-label="Comments">
 	<h2>Comments</h2>
 	{% if comments %}
 	{% for comment in comments %}
-	<article>
-		<h3>Comment by {{ comment.createdBy.get_full_name }}</h3>
-		<p>{{ comment.content }}</p>
+	<article class="card">
+		<div class="card-content">
+			<h3>Comment by {{ comment.createdBy.get_full_name }}</h3>
+			<p>{{ comment.content }}</p>
+		</div>
 	</article>
 	{% endfor %}
 	{% else %}
-	<p>No comments yet.</P>
+	<div class="card empty-state">
+		<div class="card-content">
+			<i class="material-icons" aria-hidden="true">forum</i>
+			<p>No comments yet.</p>
+		</div>
+	</div>
 	{% endif %}
 </section>
-<h2>Add a comment</h2>
-{% if request.user.is_authenticated %}
-<div class="card">
-	<div class="card-content">
-			<form action="{% url 'discussions:topicPage' topic.base36Id %}" method="post" hx-post="{% url 'discussions:topicPage' topic.base36Id %}" hx-target="#main-content" hx-swap="innerHTML" role="form">
-			{% csrf_token %}
-			{{ form }}
-			<button type="submit" class="btn btn-filled">Comment</button>
-		</form>
+
+<section aria-label="Add a comment">
+	<h2>Add a comment</h2>
+	{% if request.user.is_authenticated %}
+	<div class="row">
+		<div class="col s12 m8 l6">
+			<div class="card">
+				<div class="card-content">
+					<form action="{% url 'discussions:topicPage' topic.base36Id %}" method="post" hx-post="{% url 'discussions:topicPage' topic.base36Id %}" hx-target="#main-content" hx-swap="innerHTML" role="form">
+						{% csrf_token %}
+						{{ form }}
+						<button type="submit" class="btn btn-filled">Comment</button>
+					</form>
+				</div>
+			</div>
+		</div>
 	</div>
-</div>
-{% else %}
-<p>You need to <a href="{% url 'core:login' %}?next={{ request.path }}">login</a> to add a comment.</p>
-{% endif %}
+	{% else %}
+	<p>You need to <a href="{% url 'core:login' %}?next={{ request.path }}">login</a> to add a comment.</p>
+	{% endif %}
+</section>
 {% endblock %}
