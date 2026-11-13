@@ -11,6 +11,13 @@
 
 		for (var i = 0; i < toggles.length; i++) {
 			toggles[i].setAttribute('aria-pressed', isLight ? 'true' : 'false');
+			var targetTheme = isLight ? 'dark' : 'light';
+			var actionLabel = 'Switch to ' + targetTheme + ' theme';
+			toggles[i].setAttribute('aria-label', actionLabel);
+			var label = toggles[i].querySelector('.theme-toggle-label');
+			if (label) {
+				label.textContent = actionLabel;
+			}
 		}
 	}
 
@@ -32,7 +39,7 @@
 		}
 	}
 
-	document.addEventListener('DOMContentLoaded', function () {
+	function initialize() {
 		applyTheme(getTheme(), false);
 
 		var toggles = document.querySelectorAll('[data-theme-toggle]');
@@ -289,5 +296,11 @@
 		} else {
 			dismissTimer = window.setTimeout(dismiss, 10000);
 		}
-	});
+	}
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', initialize);
+	} else {
+		initialize();
+	}
 })();

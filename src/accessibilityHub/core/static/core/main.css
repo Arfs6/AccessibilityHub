@@ -224,6 +224,13 @@ a:focus {
 	color: var(--link-hover);
 }
 
+.card a,
+.card a:visited,
+.card a:hover,
+.card a:focus {
+	color: var(--text-main);
+}
+
 a:focus-visible,
 button:focus-visible {
 	outline: 2px solid var(--focus-ring);
@@ -748,15 +755,19 @@ form .helptext ul {
 	white-space: normal;
 }
 
+.theme-toggle .theme-icon-dark {
+	display: none;
+}
+
 .theme-toggle .theme-icon-light {
+	display: inline-block;
+}
+
+:root[data-theme="light"] .theme-toggle .theme-icon-light {
 	display: none;
 }
 
 :root[data-theme="light"] .theme-toggle .theme-icon-dark {
-	display: none;
-}
-
-:root[data-theme="light"] .theme-toggle .theme-icon-light {
 	display: inline-block;
 }
 

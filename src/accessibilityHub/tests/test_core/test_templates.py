@@ -138,7 +138,8 @@ class TestThemeSystem(TestCase):
         self.assertEqual(len(toggles), 2)
         for toggle in toggles:
             self.assertIn('aria-pressed="false"', toggle)
-        self.assertEqual(html.count('>Light theme</span>'), 2)
+            self.assertIn('aria-label="Switch to light theme"', toggle)
+        self.assertEqual(html.count('>Switch to light theme</span>'), 2)
         self.assertEqual(html.count('theme-icon-dark'), 2)
         self.assertEqual(html.count('theme-icon-light'), 2)
 
@@ -150,6 +151,16 @@ class TestThemeSystem(TestCase):
 
         self.assertIn(':root[data-theme="light"] .theme-toggle .theme-icon-dark', css)
         self.assertIn(':root[data-theme="light"] .theme-toggle .theme-icon-light', css)
+
+    def test_mainCss_keepsCardLinksReadableOnDarkSurfaces(self):
+        """Card links should use the surface text colour, not the page link colour."""
+        cssPath = finders.find('core/main.css')
+        self.assertIsNotNone(cssPath)
+        css = Path(cssPath).read_text(encoding='utf-8')
+
+        self.assertIn('.card a,', css)
+        self.assertIn('.card a:visited,', css)
+        self.assertIn('\tcolor: var(--text-main);', css)
 
     def test_mainJs_appliesAndPersistsTheme(self):
         """The toggle should update the attribute and save the choice."""
