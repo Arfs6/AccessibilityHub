@@ -1,16 +1,16 @@
 """Tests for core templates and their supporting frontend assets."""
 
 import re
+import tomllib
 from pathlib import Path
 
+from discussions.models import Topic
 from django.contrib.auth import get_user_model
 from django.contrib.staticfiles import finders
 from django.template import loader
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
-
-from discussions.models import Topic
 from reviews.models import Owner, Tool
 
 
@@ -58,9 +58,7 @@ class TestDemoBanner(TestCase):
         response = self.client.get(reverse('core:home'))
         html = response.content.decode()
 
-        self.assertLess(
-            html.index('id="demo-banner"'), html.index('<main id="main-content"')
-        )
+        self.assertLess(html.index('id="demo-banner"'), html.index('<main id="main-content"'))
 
 
 class TestNavigationHeader(TestCase):
@@ -176,9 +174,7 @@ class TestThemeSystem(TestCase):
         self.assertIn('onCloseEnd', script)
         self.assertIn('sidenavInstance.close()', script)
         self.assertIn('sidenavEl.inert = !open', script)
-        self.assertIn(
-            "sidenavEl.setAttribute('aria-hidden', open ? 'false' : 'true')", script
-        )
+        self.assertIn("sidenavEl.setAttribute('aria-hidden', open ? 'false' : 'true')", script)
         self.assertIn('!sidenavInstance || !sidenavInstance.isOpen', script)
         self.assertIn('if (!sidenavInstance || sidenavInstance.isOpen) {', script)
         self.assertIn("querySelector('.navbar .brand-logo')", script)
@@ -431,3 +427,171 @@ class TestSharedComponents(TestCase):
                 self.assertIn(token, css)
 
         self.assertNotIn('form input[type="submit"]', css)
+
+
+class TestCopyAndMarkupFixes(TestCase):
+    """Regression tests for the Section 5 copy and markup fixes."""
+
+    def test_homePage_hasCorrectedCopy(self):
+        """The home page should not retain the old spelling mistakes."""
+        response = self.client.get(reverse('core:home'))
+
+        self.assertContains(
+            response,
+            '<h2>Save hours of searching for accessible tools</h2>',
+        )
+        self.assertContains(response, 'This will save you')
+        self.assertNotContains(response, 'Safe hours')
+        self.assertNotContains(response, 'safe you')
+
+    def test_aboutPage_hasCorrectedCopy(self):
+        """The about page should describe the live discussions feature."""
+        response = self.client.get(reverse('core:about'))
+
+        self.assertContains(response, 'aims to make')
+        self.assertContains(response, 'Creating a platform')
+        self.assertContains(response, 'aims to collect')
+        self.assertContains(response, '<h2>Discussions</h2>')
+        self.assertContains(response, 'They provide a platform')
+        self.assertNotContains(response, 'aims in making')
+        self.assertNotContains(response, 'aplatform')
+        self.assertNotContains(response, 'accessiility')
+        self.assertNotContains(response, 'aims in collecting')
+        self.assertNotContains(response, '<h2>Discussion</h2>')
+        self.assertNotContains(response, "haven't been implemented yet")
+
+    def test_signupAndLogout_useLowercaseH1(self):
+        """Malformed uppercase heading tags should not return."""
+        pages = (
+            (reverse('core:signup'), '<h1>Join us</h1>'),
+            (reverse('core:logout'), '<h1>Ready to leave?</h1>'),
+        )
+
+        for url, heading in pages:
+            with self.subTest(page=url):
+                response = self.client.get(url)
+                self.assertContains(response, heading)
+                self.assertNotContains(response, '<H1>')
+
+
+class TestNoJsFallbacks(TestCase):
+    """Verify htmx forms keep usable non-JavaScript fallbacks."""
+
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(
+            username='fallback-user',
+            password='unused-password',
+        )
+        self.owner = Owner.objects.create(
+            name='Fallback Owner',
+            url='https://fallback.example.com',
+            verified=True,
+        )
+        self.tool = Tool.objects.create(
+            name='Fallback Tool',
+            url='https://fallback.example.com/tool',
+            owner=self.owner,
+            verified=True,
+        )
+        self.topic = Topic.objects.create(
+            name='Fallback Topic',
+            description='A topic for fallback testing.',
+            createdBy=self.user,
+        )
+        self.client.force_login(self.user)
+
+    def test_renderedForms_haveActionAndMethod(self):
+        """Auth, review, and comment forms should submit without JavaScript."""
+        toolUrl = reverse(
+            'reviews:tool',
+            kwargs={
+                'ownerBase36Id': self.owner.base36Id,
+                'toolSlug': self.tool.slug,
+            },
+        )
+        topicUrl = reverse(
+            'discussions:topicPage',
+            kwargs={'base36Id': self.topic.base36Id},
+        )
+        pages = (
+            (reverse('core:login'), reverse('core:login')),
+            (reverse('core:signup'), reverse('core:signup')),
+            (toolUrl, toolUrl),
+            (topicUrl, topicUrl),
+        )
+
+        for url, action in pages:
+            with self.subTest(page=url):
+                html = self.client.get(url).content.decode()
+                self.assertRegex(
+                    html,
+                    rf'action="{re.escape(action)}"\s+method="[Pp][Oo][Ss][Tt]"',
+                )
+
+    def test_newToolForms_haveNoJsFallbacksAndMainContentTarget(self):
+        """Both steps of the new-tool flow should replace the content region."""
+        newToolUrl = reverse('reviews:newOwnerAndTool')
+
+        ownerResponse = self.client.get(newToolUrl)
+        self._assertNoJsFallback(ownerResponse, newToolUrl)
+
+        toolResponse = self.client.post(
+            newToolUrl,
+            {
+                'formName': 'OwnerForm',
+                'name': 'Fallback Owner',
+                'url': 'https://fallback.example.com',
+                'description': 'Fallback owner.',
+            },
+        )
+        self.assertTemplateUsed(toolResponse, 'reviews/new_tool_form.html')
+        self._assertNoJsFallback(toolResponse, newToolUrl)
+
+    def test_newTopic_hasNoActionFallback(self):
+        """The new-topic flow intentionally remains htmx-only."""
+        newTopicUrl = reverse('discussions:newTopic')
+
+        html = self.client.get(newTopicUrl).content.decode()
+
+        self.assertNotIn(f'action="{newTopicUrl}"', html)
+        self.assertIn(f'hx-post="{newTopicUrl}"', html)
+
+    def _assertNoJsFallback(self, response, action):
+        html = response.content.decode()
+        self.assertIn(f'action="{action}"', html)
+        self.assertRegex(html, r'method="[Pp][Oo][Ss][Tt]"')
+        self.assertIn('hx-target="#main-content"', html)
+        self.assertIn('hx-swap="innerHTML"', html)
+
+
+class TestRepositoryHygiene(TestCase):
+    """Verify repository-level Section 5 cleanup."""
+
+    def setUp(self):
+        self.repoRoot = Path(__file__).resolve().parents[4]
+
+    def test_pyprojectDescription_isClean(self):
+        """Project metadata should not contain terminal escape sequences."""
+        pyproject = tomllib.loads((self.repoRoot / 'pyproject.toml').read_text(encoding='utf-8'))
+        description = pyproject['project']['description']
+
+        self.assertEqual(description, 'A community focused on accessibility')
+        self.assertNotIn(r'\x1b', description)
+        self.assertNotIn('\x1b', description)
+
+    def test_readmeDeploymentTypo_isFixed(self):
+        """The deployment documentation should spell serving correctly."""
+        readme = (self.repoRoot / 'README.md').read_text(encoding='utf-8')
+
+        self.assertIn('serving static files', readme)
+        self.assertNotIn('serveing', readme)
+
+    def test_legacyRootStaticFiles_areRemoved(self):
+        """The unused root static mockup should stay deleted."""
+        for relativePath in (
+            'static/index.html',
+            'static/styles/header-style.css',
+            'static/fonts/Roboto-Regular.ttf',
+        ):
+            with self.subTest(path=relativePath):
+                self.assertFalse((self.repoRoot / relativePath).exists())
