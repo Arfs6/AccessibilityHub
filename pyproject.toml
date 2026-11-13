@@ -86,6 +86,7 @@ exclude_lines = [
 packages = ["src/accessibilityHub"]
 
 [tool.ruff]
+line-length = 120
 exclude = [
 "migrations", # Automatically generated code by django-admin
 ]

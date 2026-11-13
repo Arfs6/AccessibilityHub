@@ -3,7 +3,6 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
-
 from reviews.models import Owner, Review, Tool
 
 
@@ -30,9 +29,7 @@ class TestReviewsTemplates(TestCase):
         user = get_user_model().objects.create_user(username='reviewer')
         Review.objects.create(user=user, tool=self.tool, rating=3, comment='Useful.')
         second_user = get_user_model().objects.create_user(username='second-reviewer')
-        Review.objects.create(
-            user=second_user, tool=self.tool, rating=4, comment='Good.'
-        )
+        Review.objects.create(user=second_user, tool=self.tool, rating=4, comment='Good.')
 
         response = self.client.get(reverse('reviews:index'))
         self.assertContains(response, '<h1>Tool Reviews</h1>')
@@ -59,12 +56,8 @@ class TestReviewsTemplates(TestCase):
             first_name='Review',
             last_name='Author',
         )
-        first = Review.objects.create(
-            user=user, tool=self.tool, rating=4, comment='First.'
-        )
-        second = Review.objects.create(
-            user=user, tool=self.tool, rating=3, comment='Second.'
-        )
+        first = Review.objects.create(user=user, tool=self.tool, rating=4, comment='First.')
+        second = Review.objects.create(user=user, tool=self.tool, rating=3, comment='Second.')
 
         tool_response = self.client.get(
             reverse(
@@ -82,9 +75,7 @@ class TestReviewsTemplates(TestCase):
         self.assertContains(tool_response, 'Average rating: 3.5 out of 5')
         self.assertContains(tool_response, 'class="material-icons">star_half</i>')
 
-        owner_response = self.client.get(
-            reverse('reviews:owner', kwargs={'base36Id': self.owner.base36Id})
-        )
+        owner_response = self.client.get(reverse('reviews:owner', kwargs={'base36Id': self.owner.base36Id}))
         self.assertContains(owner_response, '<h2>Tools</h2>')
         self.assertContains(owner_response, 'class="card listing-card"')
         self.assertContains(owner_response, 'rel="noopener"')

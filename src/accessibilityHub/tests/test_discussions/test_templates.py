@@ -1,11 +1,10 @@
 """Tests for discussions templates."""
 
+from discussions.models import Comment, Topic
 from django.contrib.auth.models import AnonymousUser, User
 from django.template import RequestContext, loader
 from django.test import RequestFactory, TestCase
 from django.urls import reverse
-
-from discussions.models import Comment, Topic
 
 
 class TestNewTopic(TestCase):
