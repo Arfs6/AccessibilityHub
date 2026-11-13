@@ -71,7 +71,7 @@ The [`django-htmx`](https://django-htmx.readthedocs.io/en/latest/) middleware wa
 
 ### Nginx {#nginx}
 
-[Nginx](https://nginx.org) serves as the web server for serveing static files of the website, and it sends all other requests to [gunicorn]{#gunicorn}. It also has a systemd unit.
+[Nginx](https://nginx.org) serves as the web server for serving static files of the website, and it sends all other requests to [gunicorn]{#gunicorn}. It also has a systemd unit.
 
 There is a [haproxy](https://www.haproxy.org) configuration too. It was tested at an early stage of the project development.
 
